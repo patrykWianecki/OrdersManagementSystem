@@ -28,4 +28,11 @@ public class ShopServiceImpl implements ShopService {
                 .sorted(Comparator.comparing(Shop::getId))
                 .forEach(s -> System.out.println(s.getId() + ". " + s.getName()));
     }
+
+    @Override
+    public Long OneShopFromOneCountry(String shopName, Long countryId) {
+
+
+        return null;
+    }
 }

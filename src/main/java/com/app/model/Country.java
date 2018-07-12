@@ -21,6 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Entity
+@Table(name = "countries")
 public class Country {
     @Id
     @GeneratedValue

@@ -12,6 +12,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Scanner;
 
+/**
+ * @author Patryk Wianecki
+ * @version 1.0
+ */
+
 public class App {
 
     private static MyService myService = new MyServiceImpl();
@@ -36,9 +41,6 @@ public class App {
     private static State state = State.INIT;
 
     public static void main(String[] args) {
-//        MyService myService = new MyServiceImpl();
-//        System.out.println(myService.biggestProductPriceInEachCategory());
-//        System.out.println(myService.productsOrderedByCustomersFromGivenCountry((long) 2));
         try {
             menu();
         } catch (Errors e) {
@@ -411,7 +413,7 @@ public class App {
         return state;
     }
 
-    private static State addCustomer() throws Errors {
+    private static State addCustomer() {
         System.out.println("Enter customer name");
         String name = customerService.setCustomerName(scanner.nextLine());
 
@@ -425,12 +427,7 @@ public class App {
         countryService.printAllCountries();
         long countryId = scanner.nextLong();
         scanner.nextLine();
-
-        String countryName
-                = countryRepository
-                .findOne(countryId)
-                .orElseThrow(() -> new Errors("MENU - ADD_CUSTOMER, COUNTRY NOT FOUND ", LocalDate.now()))
-                .getName();
+        countryId = customerService.OneCustomerFromOneCountry(name, surname, countryId);
 
         myService.addCustomer(CustomerDto
                 .builder()
@@ -439,14 +436,17 @@ public class App {
                 .age(age)
                 .countryDto(CountryDto
                         .builder()
-                        .name(countryName)
+                        .name(countryRepository
+                                .findOne(countryId)
+                                .orElseThrow(() -> new Errors("MENU - ADD_CUSTOMER, COUNTRY NOT FOUND ", LocalDate.now()))
+                                .getName())
                         .build())
                 .build());
 
         return state;
     }
 
-    private static State addOrder() throws Errors {
+    private static State addOrder() {
         System.out.println("Chose product id from list:");
         productService.printAllProducts();
         long productId = scanner.nextLong();
@@ -519,7 +519,7 @@ public class App {
         return state;
     }
 
-    private static State addProducer() throws Errors {
+    private static State addProducer() {
         System.out.println("Enter producer name");
         String name = producerService.setProducerName(scanner.nextLine());
 
@@ -563,7 +563,7 @@ public class App {
         return state;
     }
 
-    private static State addProduct() throws Errors {
+    private static State addProduct() {
         System.out.println("Enter product name");
         String name = productService.setProductName(scanner.nextLine());
 
@@ -610,7 +610,7 @@ public class App {
         return state;
     }
 
-    private static State addShop() throws Errors {
+    private static State addShop() {
         System.out.println("Enter shop name");
         String name = shopService.setShopName(scanner.nextLine());
 
@@ -637,26 +637,16 @@ public class App {
         return state;
     }
 
-    private static State addStock() throws Errors {
-        System.out.println("Chose product id from list");
-        productService.printAllProducts();
-        long productId = scanner.nextLong();
-        scanner.nextLine();
-        String productName
-                = productRepository
-                .findOne(productId)
-                .orElseThrow(() -> new Errors("MENU - ADD_STOCK, PRODUCT NOT FOUND", LocalDate.now()))
-                .getName();
-
+    private static State addStock() {
         System.out.println("Chose shop id from list");
         shopService.printAllShops();
         long shopId = scanner.nextLong();
         scanner.nextLine();
-        String shopName
-                = shopRepository
-                .findOne(shopId)
-                .orElseThrow(() -> new Errors("MENU ADD_STOCK, SHOP NOT FOUND", LocalDate.now()))
-                .getName();
+
+        System.out.println("Chose product id from list");
+        productService.printAllProducts();
+        long productId = scanner.nextLong();
+        scanner.nextLine();
 
         System.out.println("Enter quantity");
         int quantity = stockService.setQuantity(scanner.nextLine());
@@ -664,14 +654,21 @@ public class App {
         myService.addStock(
                 StockDto
                         .builder()
+                        .id(stockService.OneProductFromOneShop(productId, shopId))
                         .quantity(quantity)
                         .shopDto(ShopDto
                                 .builder()
-                                .name(shopName)
+                                .name(shopRepository
+                                        .findOne(shopId)
+                                        .orElseThrow(() -> new Errors("MENU ADD_STOCK, SHOP NOT FOUND", LocalDate.now()))
+                                        .getName())
                                 .build())
                         .productDto(ProductDto
                                 .builder()
-                                .name(productName)
+                                .name(productRepository
+                                        .findOne(productId)
+                                        .orElseThrow(() -> new Errors("MENU - ADD_STOCK, PRODUCT NOT FOUND", LocalDate.now()))
+                                        .getName())
                                 .build())
                         .build()
         );

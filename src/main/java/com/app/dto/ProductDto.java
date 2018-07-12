@@ -7,6 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+/**
+ * @author Patryk Wianecki
+ * @version 1.0
+ */
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

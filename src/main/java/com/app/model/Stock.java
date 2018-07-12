@@ -20,6 +20,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Data
 @Entity
+@Table(name = "stocks")
 public class Stock {
     @Id
     @GeneratedValue
@@ -28,12 +29,12 @@ public class Stock {
 
     // prodcutId
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "productId")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     // shopId
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "shopId")
+    @JoinColumn(name = "shop_id")
     private Shop shop;
 
     @Override

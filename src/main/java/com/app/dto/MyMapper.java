@@ -4,6 +4,11 @@ import com.app.model.*;
 
 import java.util.HashSet;
 
+/**
+ * @author Patryk Wianecki
+ * @version 1.0
+ */
+
 public class MyMapper {
     public CategoryDto fromCategoryToCategoryDto(Category category) {
         return category == null ? null : CategoryDto

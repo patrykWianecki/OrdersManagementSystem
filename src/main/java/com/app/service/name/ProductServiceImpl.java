@@ -39,4 +39,11 @@ public class ProductServiceImpl implements ProductService {
                 .sorted(Comparator.comparing(Product::getId))
                 .forEach(x -> System.out.println(x.getId() + ". " + x.getName()));
     }
+
+    @Override
+    public Long OneProductNameAndCategoryFromOneProducer(String productName, String categoryName, Long producerId) {
+
+
+        return null;
+    }
 }

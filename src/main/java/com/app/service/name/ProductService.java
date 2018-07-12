@@ -8,4 +8,6 @@ public interface ProductService {
     BigDecimal setProductPrice(String price);
 
     void printAllProducts();
+
+    Long OneProductNameAndCategoryFromOneProducer(String productName, String categoryName, Long producerId);
 }

@@ -23,6 +23,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Entity
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue
@@ -32,12 +33,12 @@ public class Product {
 
     // categoryId
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "categoryId")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     // producerId
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "producerId")
+    @JoinColumn(name = "producer_id")
     private Producer producer;
 
     // CUSTOMER_ORDER

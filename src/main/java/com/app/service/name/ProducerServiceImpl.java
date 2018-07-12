@@ -28,4 +28,11 @@ public class ProducerServiceImpl implements ProducerService {
                 .sorted(Comparator.comparing(Producer::getId))
                 .forEach(s -> System.out.println(s.getId() + ". " + s.getName()));
     }
+
+    @Override
+    public Long OneProducerNameAndTradeFromOneCountry(String producerName, String tradeName, Long countryId) {
+
+
+        return null;
+    }
 }

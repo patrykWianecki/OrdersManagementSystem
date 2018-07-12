@@ -22,7 +22,7 @@ public class ShopRepositoryImpl extends AbstractGenericRepository<Shop> implemen
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
             transaction.begin();
-            Query query = entityManager.createQuery("select p from Product p where p.name = :name");
+            Query query = entityManager.createQuery("select s from Shop s where s.name = :name");
             query.setParameter("name", name);
             o = Optional.of((Shop) query.getSingleResult());
             transaction.commit();

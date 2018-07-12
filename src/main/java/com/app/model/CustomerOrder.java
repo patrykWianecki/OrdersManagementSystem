@@ -22,6 +22,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Data
 @Entity
+@Table(name = "customersOrders")
 public class CustomerOrder {
     @Id
     @GeneratedValue
@@ -32,17 +33,17 @@ public class CustomerOrder {
 
     // customerId
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "customerId")
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     // paymentId
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "paymentId")
+    @JoinColumn(name = "payment_id")
     private Payment payment;
 
     // productId
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "productId")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @Override

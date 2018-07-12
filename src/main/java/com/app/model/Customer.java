@@ -22,6 +22,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Entity
+@Table(name = "customers")
 public class Customer {
     @Id
     @GeneratedValue
@@ -32,7 +33,7 @@ public class Customer {
 
     //countryId
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "countryId")
+    @JoinColumn(name = "country_id")
     private Country country;
 
     // CUSTOMER_ORDER

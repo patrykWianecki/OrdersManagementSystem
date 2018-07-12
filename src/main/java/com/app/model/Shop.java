@@ -22,6 +22,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Entity
+@Table(name = "shops")
 public class Shop {
     @Id
     @GeneratedValue
@@ -30,7 +31,7 @@ public class Shop {
 
     // countryId
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "countryId")
+    @JoinColumn(name = "country_id")
     private Country country;
 
     // STOCK

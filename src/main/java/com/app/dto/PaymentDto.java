@@ -6,6 +6,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * @author Patryk Wianecki
+ * @version 1.0
+ */
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

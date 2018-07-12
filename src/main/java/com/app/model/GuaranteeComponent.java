@@ -22,6 +22,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Entity
+@Table(name = "guaranteeComponents")
 public class GuaranteeComponent {
     @Id
     @GeneratedValue

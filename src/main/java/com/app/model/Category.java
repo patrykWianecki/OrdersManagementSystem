@@ -21,6 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Entity
+@Table(name = "categories")
 public class Category {
     @Id
     @GeneratedValue
