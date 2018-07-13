@@ -5,5 +5,5 @@ public interface ProducerService {
 
     void printAllProducers();
 
-    Long OneProducerNameAndTradeFromOneCountry(String producerName, String tradeName, Long countryId);
+    Long OneProducerNameAndTradeFromOneCountry(String producerName, Long tradeId, Long countryId);
 }

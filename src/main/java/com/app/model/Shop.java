@@ -25,7 +25,7 @@ import java.util.Set;
 @Table(name = "shops")
 public class Shop {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
 
@@ -35,7 +35,7 @@ public class Shop {
     private Country country;
 
     // STOCK
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "shop", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "shop", fetch = FetchType.EAGER)
     private Set<Stock> stocks = new HashSet<>();
 
     @Override

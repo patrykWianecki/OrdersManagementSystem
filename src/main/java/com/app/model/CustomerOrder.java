@@ -25,7 +25,7 @@ import java.util.Objects;
 @Table(name = "customersOrders")
 public class CustomerOrder {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private LocalDate date;
     private BigDecimal discount;

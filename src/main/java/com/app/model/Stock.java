@@ -23,7 +23,7 @@ import java.util.Objects;
 @Table(name = "stocks")
 public class Stock {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Integer quantity;
 

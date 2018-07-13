@@ -26,7 +26,7 @@ import java.util.Set;
 @Table(name = "products")
 public class Product {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
     private BigDecimal price;
@@ -42,15 +42,15 @@ public class Product {
     private Producer producer;
 
     // CUSTOMER_ORDER
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "product", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "product", fetch = FetchType.EAGER)
     private Set<CustomerOrder> customerOrders = new HashSet<>();
 
     // STOCK
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "product", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "product", fetch = FetchType.EAGER)
     private Set<Stock> stocks = new HashSet<>();
 
     // GUARANTEE_COMPONENTS
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "product", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "product", fetch = FetchType.EAGER)
     private Set<GuaranteeComponent> guaranteeComponents = new HashSet<>();
 
     @Override

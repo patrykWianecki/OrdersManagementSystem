@@ -25,7 +25,7 @@ import java.util.Set;
 @Table(name = "payments")
 public class Payment {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(unique = true)
     @Enumerated(EnumType.STRING)
@@ -33,13 +33,13 @@ public class Payment {
 
     // EPayment
     @ElementCollection
-    @CollectionTable(name = "epayment", joinColumns = @JoinColumn(name = "paymentId"))
-    @Column(name = "epayment")
+    @CollectionTable(name = "ePayments", joinColumns = @JoinColumn(name = "payment_id"))
+    @Column(name = "ePayments")
     @Enumerated(EnumType.STRING)
     private Set<EPayment> ePayments = new HashSet<>();
 
     // CUSTOMER_ORDER
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "payment", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "payment", fetch = FetchType.EAGER)
     private Set<CustomerOrder> customerOrders = new HashSet<>();
 
     @Override

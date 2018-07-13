@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -23,21 +24,19 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "guaranteeComponents")
-public class GuaranteeComponent {
+public class GuaranteeComponent implements Serializable {
+    // productId
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "product_id")
     @Id
     @GeneratedValue
-    private Long id;
+    private Product product;
     @Column(unique = true)
     private EGuarantee guaranteeComponent;
 
-    // productId
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "productId")
-    private Product product;
-
     @ElementCollection
-    @CollectionTable(name = "guaranteeComponent", joinColumns = @JoinColumn(name = "eguarantee"))
-    @Column(name = "guaranteeComponent")
+    @CollectionTable(name = "eGuarantees", joinColumns = @JoinColumn(name = "guarantee_component"))
+    @Column(name = "eGuarantees")
     @Enumerated(EnumType.STRING)
     private Set<EGuarantee> eGuarantees = new HashSet<>();
 
@@ -46,19 +45,19 @@ public class GuaranteeComponent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GuaranteeComponent that = (GuaranteeComponent) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(guaranteeComponent, that.guaranteeComponent);
+        return Objects.equals(product, that.product) &&
+                guaranteeComponent == that.guaranteeComponent;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, guaranteeComponent);
+        return Objects.hash(product, guaranteeComponent);
     }
 
     @Override
     public String toString() {
         return "GuaranteeComponent{" +
-                "id=" + id +
+                "product=" + product +
                 ", guaranteeComponent=" + guaranteeComponent +
                 '}';
     }

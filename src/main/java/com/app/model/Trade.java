@@ -26,13 +26,13 @@ import java.util.Set;
 @Table(name = "trades")
 public class Trade {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(unique = true)
     private String name;
 
     // PRODUCER
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "trade", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "trade", fetch = FetchType.EAGER)
     private Set<Producer> producers = new HashSet<>();
 
     @Override

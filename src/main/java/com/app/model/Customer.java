@@ -25,7 +25,7 @@ import java.util.Set;
 @Table(name = "customers")
 public class Customer {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Integer age;
     private String name;
@@ -37,7 +37,7 @@ public class Customer {
     private Country country;
 
     // CUSTOMER_ORDER
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "customer", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "customer", fetch = FetchType.EAGER)
     private Set<CustomerOrder> customerOrders = new HashSet<>();
 
     @Override

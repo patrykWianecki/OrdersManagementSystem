@@ -1,5 +1,7 @@
 package com.app.model;
 
+import javax.persistence.Table;
+
 /**
  * EGuarantee is an enum with possible Guarantee values.
  *
@@ -7,6 +9,7 @@ package com.app.model;
  * @version 1.0
  */
 
+@Table(name = "eGuarantees")
 public enum EGuarantee {
     HELP_DESK, MONEY_BACK, SERVICE, EXCHANGE;
 

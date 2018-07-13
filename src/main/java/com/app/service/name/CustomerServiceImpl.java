@@ -1,12 +1,13 @@
 package com.app.service.name;
 
-import com.app.model.Country;
+import com.app.model.Customer;
+import com.app.model.Errors;
 import com.app.repository.CountryRepository;
 import com.app.repository.CountryRepositoryImpl;
 import com.app.repository.CustomerRepository;
 import com.app.repository.CustomerRepositoryImpl;
 
-import java.util.Comparator;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -45,52 +46,19 @@ public class CustomerServiceImpl implements CustomerService {
         return Integer.valueOf(age);
     }
 
-    // tak czy find_by_name_and_surname i rzuca błąd
     @Override
-    public Long OneCustomerFromOneCountry(String customerName, String customerSurname, Long countryId) {
-        /*Customer customer
-                = customerRepository
-                .findByNameAndSurname(customerName, customerSurname)
-                .orElseThrow(() -> new Errors("CUSTOMER IN THIS COUNTRY ALREADY EXISTS ", LocalDate.now()));*/
-        List<Long> customersCountryId
+    public Long OneCustomerFromOneCountry(String customerName, String customerSurname, Long countryId) throws Errors {
+        List<Customer> customers
                 = customerRepository
                 .findAll()
                 .stream()
-                .filter(x -> x.getName().equals(customerName) && x.getSurname().equals(customerSurname))
-                .map(x -> x.getCountry().getId())
+                .filter(customer -> customer.getName().equals(customerName)
+                        && customer.getSurname().equals(customerSurname)
+                        && customer.getCountry().getId().equals(countryId))
                 .collect(Collectors.toList());
-        Long finalCountryId = countryId;
-        while (countryId.equals(customersCountryId
-                .stream()
-                .filter(x -> x.equals(finalCountryId))
-                .findAny()
-                .get())
-                ) {
-            System.out.println("Customer " + customerName + " " + customerSurname + " already exist in this country!\nChose other country");
-            availableCountryName(customersCountryId);
-            countryId = scanner.nextLong();
-            scanner.nextLine();
+        if (customers.size() != 0) {
+            throw new Errors("CUSTOMER FROM CHOSEN COUNTRY ALREADY EXISTS ", LocalDate.now());
         }
-
         return countryId;
-    }
-
-    private static void availableCountryName(List<Long> id) {
-        List<Long> countriesId = getCountriesId();
-        countriesId.removeAll(id);
-        countryRepository
-                .findAll()
-                .stream()
-                .filter(countryId -> countriesId.contains(countryId.getId()))
-                .sorted(Comparator.comparing(Country::getId))
-                .forEach(country -> System.out.println(country.getId() + ". " + country.getName()));
-    }
-
-    private static List<Long> getCountriesId() {
-        return countryRepository
-                .findAll()
-                .stream()
-                .map(Country::getId)
-                .collect(Collectors.toList());
     }
 }

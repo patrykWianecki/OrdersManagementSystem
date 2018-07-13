@@ -9,5 +9,5 @@ public interface ProductService {
 
     void printAllProducts();
 
-    Long OneProductNameAndCategoryFromOneProducer(String productName, String categoryName, Long producerId);
+    Long OneProductNameAndCategoryFromOneProducer(String productName, Long categoryId, Long producerId);
 }

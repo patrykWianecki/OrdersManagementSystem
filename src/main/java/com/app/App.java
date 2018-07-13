@@ -3,7 +3,9 @@ package com.app;
 import com.app.dto.*;
 import com.app.model.EPayment;
 import com.app.model.Errors;
+import com.app.model.Stock;
 import com.app.repository.*;
+import com.app.repository.generic.DbConnection;
 import com.app.service.MyService;
 import com.app.service.MyServiceImpl;
 import com.app.service.name.*;
@@ -26,6 +28,7 @@ public class App {
     private static ProducerRepository producerRepository = new ProducerRepositoryImpl();
     private static ProductRepository productRepository = new ProductRepositoryImpl();
     private static ShopRepository shopRepository = new ShopRepositoryImpl();
+    private static StockRepository stockRepository = new StockRepositoryImpl();
     private static TradeRepository tradeRepository = new TradeRepositoryImpl();
     private static Scanner scanner = new Scanner(System.in);
     private static CategoryService categoryService = new CategoryServiceImpl();
@@ -46,7 +49,7 @@ public class App {
         } catch (Errors e) {
             e.printStackTrace();
         }
-
+        DbConnection.getInstance().close();
     }
 
     private enum State {
@@ -523,38 +526,34 @@ public class App {
         System.out.println("Enter producer name");
         String name = producerService.setProducerName(scanner.nextLine());
 
-        System.out.println("Chose country id from list");
-        countryService.printAllCountries();
-        long countryId = scanner.nextLong();
-        scanner.nextLine();
-
-        String countryName
-                = countryRepository
-                .findOne(countryId)
-                .orElseThrow(() -> new Errors("MENU - PRODUCER, COUNTRY NOT FOUND ", LocalDate.now()))
-                .getName();
-
         System.out.println("Chose trade id from list");
         tradeService.printAllTrades();
         long tradeId = scanner.nextLong();
         scanner.nextLine();
 
-        String tradeName
-                = tradeRepository
-                .findOne(tradeId)
-                .orElseThrow(() -> new Errors("MENU - ADD_PRODUCER, TRADE NOT FOUND ", LocalDate.now()))
-                .getName();
+        System.out.println("Chose country id from list");
+        countryService.printAllCountries();
+        long countryId = scanner.nextLong();
+        scanner.nextLine();
+
+        countryId = producerService.OneProducerNameAndTradeFromOneCountry(name, tradeId, countryId);
 
         myService.addProducer(ProducerDto
                 .builder()
                 .name(name)
                 .countryDto(CountryDto
                         .builder()
-                        .name(countryName)
+                        .name(countryRepository
+                                .findOne(countryId)
+                                .orElseThrow(() -> new Errors("MENU - PRODUCER, COUNTRY NOT FOUND ", LocalDate.now()))
+                                .getName())
                         .build())
                 .tradeDto(TradeDto
                         .builder()
-                        .name(tradeName)
+                        .name(tradeRepository
+                                .findOne(tradeId)
+                                .orElseThrow(() -> new Errors("MENU - ADD_PRODUCER, TRADE NOT FOUND ", LocalDate.now()))
+                                .getName())
                         .build())
                 .build()
         );
@@ -574,21 +573,12 @@ public class App {
         categoryService.printAllCategories();
         long categoryId = scanner.nextLong();
         scanner.nextLine();
-        String categoryName
-                = categoryRepository
-                .findOne(categoryId)
-                .orElseThrow(() -> new Errors("MENU - ADD_PRODUCT, CATEGORY NOT FOUND ", LocalDate.now()))
-                .getName();
 
         System.out.println("Chose producer id from list");
         producerService.printAllProducers();
         long producerId = scanner.nextLong();
         scanner.nextLine();
-        String producerName
-                = producerRepository
-                .findOne(producerId)
-                .orElseThrow(() -> new Errors("MENU - ADD.PRODUCT, PRODUCER NOT FOUND ", LocalDate.now()))
-                .getName();
+        producerId = productService.OneProductNameAndCategoryFromOneProducer(name, categoryId, producerId);
 
         myService.addProduct(
                 ProductDto
@@ -597,11 +587,17 @@ public class App {
                         .price(price)
                         .categoryDto(CategoryDto
                                 .builder()
-                                .name(categoryName)
+                                .name(categoryRepository
+                                        .findOne(categoryId)
+                                        .orElseThrow(() -> new Errors("MENU - ADD_PRODUCT, CATEGORY NOT FOUND ", LocalDate.now()))
+                                        .getName())
                                 .build())
                         .producerDto(ProducerDto
                                 .builder()
-                                .name(producerName)
+                                .name(producerRepository
+                                        .findOne(producerId)
+                                        .orElseThrow(() -> new Errors("MENU - ADD.PRODUCT, PRODUCER NOT FOUND ", LocalDate.now()))
+                                        .getName())
                                 .build())
                         .build()
         );
@@ -618,6 +614,7 @@ public class App {
         countryService.printAllCountries();
         long countryId = scanner.nextLong();
         scanner.nextLine();
+        countryId = shopService.OneShopFromOneCountry(name, countryId);
 
         myService.addShop(
                 ShopDto
@@ -651,28 +648,7 @@ public class App {
         System.out.println("Enter quantity");
         int quantity = stockService.setQuantity(scanner.nextLine());
 
-        myService.addStock(
-                StockDto
-                        .builder()
-                        .id(stockService.OneProductFromOneShop(productId, shopId))
-                        .quantity(quantity)
-                        .shopDto(ShopDto
-                                .builder()
-                                .name(shopRepository
-                                        .findOne(shopId)
-                                        .orElseThrow(() -> new Errors("MENU ADD_STOCK, SHOP NOT FOUND", LocalDate.now()))
-                                        .getName())
-                                .build())
-                        .productDto(ProductDto
-                                .builder()
-                                .name(productRepository
-                                        .findOne(productId)
-                                        .orElseThrow(() -> new Errors("MENU - ADD_STOCK, PRODUCT NOT FOUND", LocalDate.now()))
-                                        .getName())
-                                .build())
-                        .build()
-        );
-
+        stockService.OneProductFromOneShop(shopId, productId, quantity);
         state = State.STOCK;
         return state;
     }

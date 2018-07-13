@@ -38,7 +38,6 @@ public class MyServiceImpl implements MyService {
             customerRepository.addOrUpdate(customer);
         } catch (Exception e) {
             errors.addSuppressed(e);
-            throw new Errors(EMessage.SERVICE_ADD + " Customer " + e.getMessage(), LocalDate.now());
         }
     }
 
@@ -55,7 +54,6 @@ public class MyServiceImpl implements MyService {
             shopRepository.addOrUpdate(shop);
         } catch (Exception e) {
             errors.addSuppressed(e);
-            throw new Errors(EMessage.SERVICE_ADD + " Shop " + e.getMessage(), LocalDate.now());
         }
     }
 
@@ -77,7 +75,6 @@ public class MyServiceImpl implements MyService {
             producerRepository.addOrUpdate(producer);
         } catch (Exception e) {
             errors.addSuppressed(e);
-            throw new Errors(EMessage.SERVICE_ADD + " Producer " + e.getMessage(), LocalDate.now());
         }
     }
 
@@ -99,7 +96,6 @@ public class MyServiceImpl implements MyService {
             productRepository.addOrUpdate(product);
         } catch (Exception e) {
             errors.addSuppressed(e);
-            throw new Errors(EMessage.SERVICE_ADD + " Product " + e.getMessage(), LocalDate.now());
         }
     }
 
@@ -112,7 +108,7 @@ public class MyServiceImpl implements MyService {
                     .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " Product " + stockDto.getProductDto().getName(), LocalDate.now()));
             Shop shop
                     = shopRepository
-                    .findByName(stockDto.getProductDto().getName())
+                    .findByName(stockDto.getShopDto().getName())
                     .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " Shop " + stockDto.getShopDto().getName(), LocalDate.now()));
 
             Stock stock = myMapper.fromStockDtoToStock(stockDto);
@@ -121,7 +117,6 @@ public class MyServiceImpl implements MyService {
             stockRepository.addOrUpdate(stock);
         } catch (Exception e) {
             errors.addSuppressed(e);
-            throw new Errors(EMessage.SERVICE_ADD + " Stock " + e.getMessage(), LocalDate.now());
         }
     }
 
@@ -150,12 +145,11 @@ public class MyServiceImpl implements MyService {
             customerOrderRepository.addOrUpdate(customerOrder);
         } catch (Exception e) {
             errors.addSuppressed(e);
-            throw new Errors(EMessage.SERVICE_ADD + " Customer Order " + e.getMessage(), LocalDate.now());
         }
     }
 
     @Override
-    public Map<Category, Product> biggestProductPriceInEachCategory() {
+    public Map<Category, Product> biggestProductPriceInEachCategory() throws Errors {
         return productRepository
                 .findAll()
                 .stream()
@@ -174,7 +168,7 @@ public class MyServiceImpl implements MyService {
     }
 
     @Override
-    public Map<Customer, List<CustomerOrder>> productsOrderedByCustomersFromGivenCountry(Long id) {
+    public Map<Customer, List<CustomerOrder>> productsOrderedByCustomersFromGivenCountry(Long id) throws Errors {
         return customerOrderRepository
                 .findAll()
                 .stream()
@@ -194,22 +188,22 @@ public class MyServiceImpl implements MyService {
     }
 
     @Override
-    public List<Product> sortedProductsWithGuaranteeByCategory() {
+    public List<Product> sortedProductsWithGuaranteeByCategory() throws Errors {
         return null;
     }
 
     @Override
-    public List<Shop> shopsWithProductsInStockWithDifferentCountryThanShop() {
+    public List<Shop> shopsWithProductsInStockWithDifferentCountryThanShop() throws Errors {
         return null;
     }
 
     @Override
-    public List<Producer> producersWithGivenTradeNameWhichProducesMoreThanGivenNumber() {
+    public List<Producer> producersWithGivenTradeNameWhichProducesMoreThanGivenNumber() throws Errors {
         return null;
     }
 
     @Override
-    public List<CustomerOrder> ordersWithGivenDateAndPriceAmount() {
+    public List<CustomerOrder> ordersWithGivenDateAndPriceAmount() throws Errors {
         return null;
     }
 
@@ -223,7 +217,7 @@ public class MyServiceImpl implements MyService {
     }
 
     @Override
-    public List<Customer> customersWithMoreThanOneProductWithSameCountry() {
+    public List<Customer> customersWithMoreThanOneProductWithSameCountry() throws Errors {
         return null;
     }
 }

@@ -1,11 +1,15 @@
 package com.app.service.name;
 
+import com.app.model.Errors;
 import com.app.model.Shop;
 import com.app.repository.ShopRepository;
 import com.app.repository.ShopRepositoryImpl;
 
+import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class ShopServiceImpl implements ShopService {
     private Scanner scanner = new Scanner(System.in);
@@ -30,9 +34,16 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public Long OneShopFromOneCountry(String shopName, Long countryId) {
-
-
-        return null;
+    public Long OneShopFromOneCountry(String shopName, Long countryId) throws Errors {
+        List<Shop> shops
+                = shopRepository
+                .findAll()
+                .stream()
+                .filter(shop -> shop.getName().equals(shopName) && shop.getCountry().getId().equals(countryId))
+                .collect(Collectors.toList());
+        if (shops.size() != 0) {
+            throw new Errors("SHOP FROM CHOSEN COUNTRY ALREADY EXISTS ", LocalDate.now());
+        }
+        return countryId;
     }
 }

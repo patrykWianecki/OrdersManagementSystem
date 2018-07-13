@@ -25,7 +25,7 @@ import java.util.Set;
 @Table(name = "producers")
 public class Producer {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
 
@@ -40,7 +40,7 @@ public class Producer {
     private Trade trade;
 
     // PRODUCT
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "producer", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "producer", fetch = FetchType.EAGER)
     private Set<Product> products = new HashSet<>();
 
     public void setName(String name) {

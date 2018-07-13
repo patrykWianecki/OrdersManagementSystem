@@ -32,8 +32,8 @@ public class Errors extends RuntimeException {
     private String message;
 
     @ElementCollection
-    @CollectionTable(name = "emessage", joinColumns = @JoinColumn(name = "messageId"))
-    @Column(name = "emessage")
+    @CollectionTable(name = "eMessages", joinColumns = @JoinColumn(name = "message_id"))
+    @Column(name = "eMessages")
     @Enumerated(EnumType.STRING)
     private Set<EMessage> emeggages = new HashSet<>();
 

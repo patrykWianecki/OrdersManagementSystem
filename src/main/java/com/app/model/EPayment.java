@@ -1,5 +1,7 @@
 package com.app.model;
 
+import javax.persistence.Table;
+
 /**
  * EPayment is an enum with possible Payment values.
  *
@@ -7,6 +9,7 @@ package com.app.model;
  * @version 1.0
  */
 
+@Table(name = "ePayments")
 public enum EPayment {
     CASH, CARD, MONEY_TRANSFER;
 
