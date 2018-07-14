@@ -3,12 +3,10 @@ package com.app;
 import com.app.dto.*;
 import com.app.model.EPayment;
 import com.app.model.Errors;
-import com.app.model.Stock;
 import com.app.repository.*;
 import com.app.repository.generic.DbConnection;
 import com.app.service.MyService;
 import com.app.service.MyServiceImpl;
-import com.app.service.name.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,23 +22,10 @@ public class App {
     private static MyService myService = new MyServiceImpl();
     private static CategoryRepository categoryRepository = new CategoryRepositoryImpl();
     private static CountryRepository countryRepository = new CountryRepositoryImpl();
-    private static PaymentRepository paymentRepository = new PaymentRepositoryImpl();
     private static ProducerRepository producerRepository = new ProducerRepositoryImpl();
     private static ProductRepository productRepository = new ProductRepositoryImpl();
-    private static ShopRepository shopRepository = new ShopRepositoryImpl();
-    private static StockRepository stockRepository = new StockRepositoryImpl();
     private static TradeRepository tradeRepository = new TradeRepositoryImpl();
     private static Scanner scanner = new Scanner(System.in);
-    private static CategoryService categoryService = new CategoryServiceImpl();
-    private static CountryService countryService = new CountryServiceImpl();
-    private static CustomerOrdersService ordersService = new CustomerOrdersServiceImpl();
-    private static CustomerService customerService = new CustomerServiceImpl();
-    private static PaymentService paymentService = new PaymentServiceImpl();
-    private static ProducerService producerService = new ProducerServiceImpl();
-    private static ProductService productService = new ProductServiceImpl();
-    private static ShopService shopService = new ShopServiceImpl();
-    private static StockService stockService = new StockServiceImpl();
-    private static TradeService tradeService = new TradeServiceImpl();
     private static State state = State.INIT;
 
     public static void main(String[] args) {
@@ -378,32 +363,32 @@ public class App {
                 break;
             }
             case 1: {
-                categoryService.printAllCategories();
+                myService.printAllCategories();
                 state = State.OTHER;
                 break;
             }
             case 2: {
-                countryService.printAllCountries();
+                myService.printAllCountries();
                 state = State.OTHER;
                 break;
             }
             case 3: {
-                producerService.printAllProducers();
+                myService.printAllProducers();
                 state = State.OTHER;
                 break;
             }
             case 4: {
-                productService.printAllProducts();
+                myService.printAllProducts();
                 state = State.OTHER;
                 break;
             }
             case 5: {
-                shopService.printAllShops();
+                myService.printAllShops();
                 state = State.OTHER;
                 break;
             }
             case 6: {
-                tradeService.printAllTrades();
+                myService.printAllTrades();
                 state = State.OTHER;
                 break;
             }
@@ -418,19 +403,19 @@ public class App {
 
     private static State addCustomer() {
         System.out.println("Enter customer name");
-        String name = customerService.setCustomerName(scanner.nextLine());
+        String name = myService.setCustomerName(scanner.nextLine());
 
         System.out.println("Enter customer surname");
-        String surname = customerService.setCustomerSurname(scanner.nextLine());
+        String surname = myService.setCustomerSurname(scanner.nextLine());
 
         System.out.println("Enter customer age");
-        int age = customerService.setCustomerAge(scanner.nextLine());
+        int age = myService.setCustomerAge(scanner.nextLine());
 
         System.out.println("Chose country id from list:");
-        countryService.printAllCountries();
+        myService.printAllCountries();
         long countryId = scanner.nextLong();
         scanner.nextLine();
-        countryId = customerService.OneCustomerFromOneCountry(name, surname, countryId);
+        countryId = myService.OneCustomerFromOneCountry(name, surname, countryId);
 
         myService.addCustomer(CustomerDto
                 .builder()
@@ -451,56 +436,51 @@ public class App {
 
     private static State addOrder() {
         System.out.println("Chose product id from list:");
-        productService.printAllProducts();
+        myService.printAllProducts();
         long productId = scanner.nextLong();
         scanner.nextLine();
-        String productName
-                = productRepository
-                .findOne(productId)
-                .orElseThrow(() -> new Errors("MENU - ADD_ORDER, PRODUCT NOT FOUND", LocalDate.now()))
-                .getName();
 
         System.out.println("Enter discount:");
-        BigDecimal discount = ordersService.setOrderDiscount(scanner.nextLine());
+        BigDecimal discount = myService.setOrderDiscount(scanner.nextLine());
 
         System.out.println("Enter quantity:");
-        int quantity = ordersService.setOrderQuantity(scanner.nextLine(), productId);
+        int quantity = myService.setOrderQuantity(scanner.nextLine(), productId);
 
         System.out.println("Chose payment id from list:");
-        paymentService.printAllPayments();
+        myService.printAllPayments();
         int paymentId = scanner.nextInt();
         scanner.nextLine();
 
         System.out.println("Enter customer name");
-        String name = customerService.setCustomerName(scanner.nextLine());
+        String name = myService.setCustomerName(scanner.nextLine());
 
         System.out.println("Enter customer surname");
-        String surname = customerService.setCustomerSurname(scanner.nextLine());
+        String surname = myService.setCustomerSurname(scanner.nextLine());
 
         System.out.println("Enter customer age");
-        int age = customerService.setCustomerAge(scanner.nextLine());
+        int age = myService.setCustomerAge(scanner.nextLine());
 
         System.out.println("Chose country id from list:");
-        countryService.printAllCountries();
+        myService.printAllCountries();
         long countryId = scanner.nextLong();
         scanner.nextLine();
 
-        String countryName
-                = countryRepository
-                .findOne(countryId)
-                .orElseThrow(() -> new Errors("MENU - ADD_CUSTOMER, COUNTRY NOT FOUND ", LocalDate.now()))
-                .getName();
+        System.out.println("Enter date:");
+        LocalDate date = myService.setOrderDate();
 
         myService.addCustomerOrder(
                 CustomerOrderDto
                         .builder()
                         .productDto(ProductDto
                                 .builder()
-                                .name(productName)
+                                .name(productRepository
+                                        .findOne(productId)
+                                        .orElseThrow(() -> new Errors("MENU - ADD_ORDER, PRODUCT NOT FOUND", LocalDate.now()))
+                                        .getName())
                                 .build())
                         .quantity(quantity)
                         .discount(discount)
-                        .date(LocalDate.now())
+                        .date(date)
                         .paymentDto(PaymentDto
                                 .builder()
                                 .payment(EPayment.returnPayment(paymentId))
@@ -512,7 +492,10 @@ public class App {
                                 .age(age)
                                 .countryDto(CountryDto
                                         .builder()
-                                        .name(countryName)
+                                        .name(countryRepository
+                                                .findOne(countryId)
+                                                .orElseThrow(() -> new Errors("MENU - ADD_CUSTOMER, COUNTRY NOT FOUND ", LocalDate.now()))
+                                                .getName())
                                         .build())
                                 .build())
                         .build()
@@ -524,19 +507,19 @@ public class App {
 
     private static State addProducer() {
         System.out.println("Enter producer name");
-        String name = producerService.setProducerName(scanner.nextLine());
+        String name = myService.setProducerName(scanner.nextLine());
 
         System.out.println("Chose trade id from list");
-        tradeService.printAllTrades();
+        myService.printAllTrades();
         long tradeId = scanner.nextLong();
         scanner.nextLine();
 
         System.out.println("Chose country id from list");
-        countryService.printAllCountries();
+        myService.printAllCountries();
         long countryId = scanner.nextLong();
         scanner.nextLine();
 
-        countryId = producerService.OneProducerNameAndTradeFromOneCountry(name, tradeId, countryId);
+        countryId = myService.OneProducerNameAndTradeFromOneCountry(name, tradeId, countryId);
 
         myService.addProducer(ProducerDto
                 .builder()
@@ -564,21 +547,21 @@ public class App {
 
     private static State addProduct() {
         System.out.println("Enter product name");
-        String name = productService.setProductName(scanner.nextLine());
+        String name = myService.setProductName(scanner.nextLine());
 
         System.out.println("Enter product price");
-        BigDecimal price = productService.setProductPrice(scanner.nextLine());
+        BigDecimal price = myService.setProductPrice(scanner.nextLine());
 
         System.out.println("Chose category id from list");
-        categoryService.printAllCategories();
+        myService.printAllCategories();
         long categoryId = scanner.nextLong();
         scanner.nextLine();
 
         System.out.println("Chose producer id from list");
-        producerService.printAllProducers();
+        myService.printAllProducers();
         long producerId = scanner.nextLong();
         scanner.nextLine();
-        producerId = productService.OneProductNameAndCategoryFromOneProducer(name, categoryId, producerId);
+        producerId = myService.OneProductNameAndCategoryFromOneProducer(name, categoryId, producerId);
 
         myService.addProduct(
                 ProductDto
@@ -608,13 +591,13 @@ public class App {
 
     private static State addShop() {
         System.out.println("Enter shop name");
-        String name = shopService.setShopName(scanner.nextLine());
+        String name = myService.setShopName(scanner.nextLine());
 
         System.out.println("Chose country id from list:");
-        countryService.printAllCountries();
+        myService.printAllCountries();
         long countryId = scanner.nextLong();
         scanner.nextLine();
-        countryId = shopService.OneShopFromOneCountry(name, countryId);
+        countryId = myService.OneShopFromOneCountry(name, countryId);
 
         myService.addShop(
                 ShopDto
@@ -636,19 +619,19 @@ public class App {
 
     private static State addStock() {
         System.out.println("Chose shop id from list");
-        shopService.printAllShops();
+        myService.printAllShops();
         long shopId = scanner.nextLong();
         scanner.nextLine();
 
         System.out.println("Chose product id from list");
-        productService.printAllProducts();
+        myService.printAllProducts();
         long productId = scanner.nextLong();
         scanner.nextLine();
 
         System.out.println("Enter quantity");
-        int quantity = stockService.setQuantity(scanner.nextLine());
+        int quantity = myService.setQuantity(scanner.nextLine());
 
-        stockService.OneProductFromOneShop(shopId, productId, quantity);
+        myService.OneProductFromOneShop(shopId, productId, quantity);
         state = State.STOCK;
         return state;
     }

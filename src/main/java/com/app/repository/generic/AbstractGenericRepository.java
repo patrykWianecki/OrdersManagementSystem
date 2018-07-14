@@ -32,6 +32,9 @@ public class AbstractGenericRepository<T> implements GenericRepository<T> {
             entityManager.persist(t);
             transaction.commit();
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             throw new Errors(EMessage.ADD_OR_UPDATE + " " + e.getMessage(), LocalDate.now());
         } finally {
             if (entityManager != null) {
@@ -52,6 +55,9 @@ public class AbstractGenericRepository<T> implements GenericRepository<T> {
             entityManager.remove(t);
             transaction.commit();
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             throw new Errors(EMessage.DELETE + " " + e.getMessage(), LocalDate.now());
         } finally {
             if (entityManager != null) {
@@ -72,6 +78,9 @@ public class AbstractGenericRepository<T> implements GenericRepository<T> {
             o = Optional.of(entityManager.find(entityClass, id));
             transaction.commit();
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             throw new Errors(EMessage.FIND_ONE + " " + e.getMessage(), LocalDate.now());
         } finally {
             if (entityManager != null) {
@@ -95,6 +104,9 @@ public class AbstractGenericRepository<T> implements GenericRepository<T> {
             items = query.getResultList();
             transaction.commit();
         } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             throw new Errors(EMessage.FIND_ALL + " " + e.getMessage(), LocalDate.now());
         } finally {
             if (entityManager != null) {
