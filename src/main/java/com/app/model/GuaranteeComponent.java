@@ -31,7 +31,6 @@ public class GuaranteeComponent implements Serializable {
     @Id
     @GeneratedValue
     private Product product;
-    @Column(unique = true)
     private EGuarantee guaranteeComponent;
 
     @ElementCollection

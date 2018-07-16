@@ -26,7 +26,7 @@ import java.util.Set;
 @Table(name = "trades")
 public class Trade {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
     @Column(unique = true)
     private String name;

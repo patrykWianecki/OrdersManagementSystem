@@ -25,7 +25,7 @@ import java.util.Set;
 @Table(name = "payments")
 public class Payment {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
     @Column(unique = true)
     @Enumerated(EnumType.STRING)

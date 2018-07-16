@@ -9,19 +9,23 @@ import java.util.List;
 import java.util.Map;
 
 public interface MyService {
+    void addCategory(CategoryDto categoryDto);
+
+    void addCountry(CountryDto countryDto);
+
     void addCustomer(CustomerDto customerDto);
 
-    void addShop(ShopDto shopDto);
+    void addCustomerOrder(CustomerOrderDto customerOrderDto);
 
     void addProducer(ProducerDto producerDto);
 
     void addProduct(ProductDto productDto);
 
+    void addShop(ShopDto shopDto);
+
     void addStock(StockDto stockDto);
 
-    void updateStock(Integer quantity, Long id);
-
-    void addCustomerOrder(CustomerOrderDto customerOrderDto);
+    void addTrade(TradeDto tradeDto);
 
     Map<Category, Product> biggestProductPriceInEachCategory();
 
@@ -43,6 +47,8 @@ public interface MyService {
 
     void printAllCountries();
 
+    void printAllCustomers();
+
     void printAllPayments();
 
     void printAllProducers();
@@ -52,6 +58,8 @@ public interface MyService {
     void printAllShops();
 
     void printAllTrades();
+
+    String setCategoryName(String name);
 
     String setCountryName(String name);
 
@@ -67,25 +75,31 @@ public interface MyService {
 
     Integer setCustomerAge(String age);
 
-    Long OneCustomerFromOneCountry(String customerName, String customerSurname, Long customerId);
+    Integer setPaymentType(String number);
 
     String setProducerName(String name);
-
-    Long OneProducerNameAndTradeFromOneCountry(String producerName, Long tradeId, Long countryId);
 
     String setProductName(String name);
 
     BigDecimal setProductPrice(String price);
 
-    Long OneProductNameAndCategoryFromOneProducer(String productName, Long categoryId, Long producerId);
-
     String setShopName(String name);
-
-    Long OneShopFromOneCountry(String shopName, Long countryId);
 
     int setQuantity(String quantity);
 
-    void OneProductFromOneShop(Long shopId, Long productId, Integer stockQuantity);
-
     String setTradeName(String name);
+
+    Long setId(String id);
+
+    Long oneCustomerFromOneCountry(String customerName, String customerSurname, Long customerId);
+
+    Long oneProducerNameAndTradeFromOneCountry(String producerName, Long tradeId, Long countryId);
+
+    Long oneProductNameAndCategoryFromOneProducer(String productName, Long categoryId, Long producerId);
+
+    Long oneShopFromOneCountry(String shopName, Long countryId);
+
+    void oneProductFromOneShopInStock(Long shopId, Long productId, Integer stockQuantity);
+
+    void updateProductQuantity(Integer quantity, Long productId);
 }

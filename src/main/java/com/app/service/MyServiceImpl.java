@@ -31,6 +31,18 @@ public class MyServiceImpl implements MyService {
     private final static LocalDate ACTUAL_DATE = LocalDate.now();
 
     @Override
+    public void addCategory(CategoryDto categoryDto) {
+        Category category = myMapper.fromCategoryDtoToCategory(categoryDto);
+        categoryRepository.addOrUpdate(category);
+    }
+
+    @Override
+    public void addCountry(CountryDto countryDto) {
+        Country country = myMapper.fromCountryDtoToCountry(countryDto);
+        countryRepository.addOrUpdate(country);
+    }
+
+    @Override
     public void addCustomer(CustomerDto customerDto) throws Errors {
         try {
             Country country
@@ -47,16 +59,28 @@ public class MyServiceImpl implements MyService {
     }
 
     @Override
-    public void addShop(ShopDto shopDto) throws Errors {
+    public void addCustomerOrder(CustomerOrderDto customerOrderDto) throws Errors {
         try {
-            Country country
-                    = countryRepository
-                    .findByName(shopDto.getCountryDto().getName())
-                    .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " Country " + shopDto.getCountryDto().getName(), LocalDate.now()));
+            Customer customer
+                    = customerRepository
+                    .findByNameAndSurname(customerOrderDto.getCustomerDto().getName(), customerOrderDto.getCustomerDto().getSurname())
+                    .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " Customer "
+                            + customerOrderDto.getCustomerDto().getName() + " "
+                            + customerOrderDto.getCustomerDto().getSurname(), LocalDate.now()));
+            Payment payment
+                    = paymentRepository
+                    .findOne(customerOrderDto.getPaymentDto().getId())
+                    .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " Payment " + customerOrderDto.getPaymentDto().getPayment(), LocalDate.now()));
+            Product product
+                    = productRepository
+                    .findByName(customerOrderDto.getProductDto().getName())
+                    .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " Product " + customerOrderDto.getProductDto().getName(), LocalDate.now()));
 
-            Shop shop = myMapper.fromShopDtoToShop(shopDto);
-            shop.setCountry(country);
-            shopRepository.addOrUpdate(shop);
+            CustomerOrder customerOrder = myMapper.fromCustomerOrderDtoToCustomerOrder(customerOrderDto);
+            customerOrder.setCustomer(customer);
+            customerOrder.setProduct(product);
+            customerOrder.setPayment(payment);
+            customerOrderRepository.addOrUpdate(customerOrder);
         } catch (Exception e) {
             errors.addSuppressed(e);
         }
@@ -105,6 +129,24 @@ public class MyServiceImpl implements MyService {
     }
 
     @Override
+    public void addShop(ShopDto shopDto) throws Errors {
+        try {
+            Country country
+                    = countryRepository
+                    .findByName(shopDto.getCountryDto().getName())
+                    .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " Country " + shopDto.getCountryDto().getName(), LocalDate.now()));
+
+            Shop shop = myMapper.fromShopDtoToShop(shopDto);
+
+            shop.setCountry(country);
+            shopRepository.addOrUpdate(shop);
+        } catch (Exception e) {
+            errors.addSuppressed(e);
+            throw new Errors("DUPA", LocalDate.now());
+        }
+    }
+
+    @Override
     public void addStock(StockDto stockDto) throws Errors {
         try {
             Product product
@@ -126,44 +168,9 @@ public class MyServiceImpl implements MyService {
     }
 
     @Override
-    public void updateStock(Integer quantity, Long id) {
-        try {
-            Stock stock
-                    = stockRepository
-                    .findOne(id)
-                    .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " STOCK ", LocalDate.now()));
-            stock.setQuantity(quantity);
-        } catch (Exception e) {
-            errors.addSuppressed(e);
-        }
-    }
-
-    @Override
-    public void addCustomerOrder(CustomerOrderDto customerOrderDto) throws Errors {
-        try {
-            Customer customer
-                    = customerRepository
-                    .findByNameAndSurname(customerOrderDto.getCustomerDto().getName(), customerOrderDto.getCustomerDto().getSurname())
-                    .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " Customer "
-                            + customerOrderDto.getCustomerDto().getName() + " "
-                            + customerOrderDto.getCustomerDto().getSurname(), LocalDate.now()));
-            Payment payment
-                    = paymentRepository
-                    .findOne(customerOrderDto.getPaymentDto().getId())
-                    .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " Payment " + customerOrderDto.getPaymentDto().getPayment(), LocalDate.now()));
-            Product product
-                    = productRepository
-                    .findByName(customerOrderDto.getProductDto().getName())
-                    .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " Product " + customerOrderDto.getProductDto().getName(), LocalDate.now()));
-
-            CustomerOrder customerOrder = myMapper.fromCustomerOrderDtoToCustomerOrder(customerOrderDto);
-            customerOrder.setCustomer(customer);
-            customerOrder.setProduct(product);
-            customerOrder.setPayment(payment);
-            customerOrderRepository.addOrUpdate(customerOrder);
-        } catch (Exception e) {
-            errors.addSuppressed(e);
-        }
+    public void addTrade(TradeDto tradeDto) {
+        Trade trade = myMapper.fromTradeDtoToTrade(tradeDto);
+        tradeRepository.addOrUpdate(trade);
     }
 
     @Override
@@ -258,6 +265,15 @@ public class MyServiceImpl implements MyService {
     }
 
     @Override
+    public void printAllCustomers() {
+        customerRepository
+                .findAll()
+                .stream()
+                .sorted(Comparator.comparing(Customer::getId))
+                .forEach(s -> System.out.println(s.getId() + ". " + s.getName() + " " + s.getSurname()));
+    }
+
+    @Override
     public void printAllPayments() {
         paymentRepository
                 .findAll()
@@ -303,9 +319,18 @@ public class MyServiceImpl implements MyService {
     }
 
     @Override
+    public String setCategoryName(String name) {
+        while (!name.matches("([A-Z]+)|")) {
+            System.out.println("Wrong category name!\nEnter again:");
+            name = scanner.nextLine();
+        }
+        return name;
+    }
+
+    @Override
     public String setCountryName(String name) {
         while (!name.matches("([A-Z]+)|")) {
-            System.out.println("Wrong country name!" + "\n" + "Enter again:");
+            System.out.println("Wrong country name!\nEnter again:");
             name = scanner.nextLine();
         }
         return name;
@@ -313,10 +338,13 @@ public class MyServiceImpl implements MyService {
 
     @Override
     public Integer setOrderQuantity(String quantity, Long productId) {
-        Integer stockQuantity
+        int stockQuantity
                 = stockRepository
-                .findOne(productId)
-                .orElseThrow(() -> new Errors("ORDERS SERVICE, PRODUCT NOT FOUND ", LocalDate.now()))
+                .findAll()
+                .stream()
+                .filter(x -> x.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " PRODUCT ", LocalDate.now()))
                 .getQuantity();
 
         while (!quantity.matches("[0-9]+")
@@ -329,10 +357,6 @@ public class MyServiceImpl implements MyService {
             quantity = scanner.nextLine();
         }
 
-        stockRepository.addOrUpdate(Stock
-                .builder()
-                .quantity(stockQuantity - Integer.valueOf(quantity))
-                .build());
         return Integer.valueOf(quantity);
     }
 
@@ -341,7 +365,7 @@ public class MyServiceImpl implements MyService {
         while (!discount.matches("([0-9])|([1-9]+[0-9])|([1]+[0]+[0])")
                 || (BigDecimal.valueOf(Integer.valueOf(discount)).compareTo(BigDecimal.valueOf(100)) > 0)
                 ) {
-            System.out.println("Wrong order discount!" + "\n" + "Enter again:");
+            System.out.println("Wrong order discount!\nEnter again:");
             discount = scanner.nextLine();
         }
         return BigDecimal.valueOf(Integer.valueOf(discount));
@@ -365,14 +389,14 @@ public class MyServiceImpl implements MyService {
                     || Integer.valueOf(day) < 1
                     || Integer.valueOf(day) > 31
                     || Integer.valueOf(day) < actualDate.getDayOfMonth()) {
-                System.out.println("Wrong day!" + "\n" + "Enter again:");
+                System.out.println("Wrong day!\nEnter again:");
                 day = scanner.nextLine();
             }
         } else {
             while (!day.matches("[0-9]{2}")
                     || Integer.valueOf(day) < 1
                     || Integer.valueOf(day) > 31) {
-                System.out.println("Wrong day!" + "\n" + "Enter again:");
+                System.out.println("Wrong day!\nEnter again:");
                 day = scanner.nextLine();
             }
         }
@@ -387,14 +411,14 @@ public class MyServiceImpl implements MyService {
                     || Integer.valueOf(month) < 1
                     || Integer.valueOf(month) > 12
                     || Integer.valueOf(month) < actualDate.getMonthValue()) {
-                System.out.println("Wrong month!" + "\n" + "Enter again:");
+                System.out.println("Wrong month!\nEnter again:");
                 month = scanner.nextLine();
             }
         } else {
             while (!month.matches("[0-9]{2}")
                     || Integer.valueOf(month) < 1
                     || Integer.valueOf(month) > 12) {
-                System.out.println("Wrong month!" + "\n" + "Enter again:");
+                System.out.println("Wrong month!\nEnter again:");
                 month = scanner.nextLine();
             }
         }
@@ -407,7 +431,7 @@ public class MyServiceImpl implements MyService {
         while (!year.matches("[0-9]{4}")
                 || Integer.valueOf(year) < actualDate.getYear()
                 || Integer.valueOf(year) > maxDate.getYear()) {
-            System.out.println("Wrong year!" + "\n" + "Enter again:");
+            System.out.println("Wrong year!\nEnter again:");
             year = scanner.nextLine();
         }
         return year;
@@ -416,7 +440,7 @@ public class MyServiceImpl implements MyService {
     @Override
     public String setCustomerName(String name) {
         while (!name.matches("([A-Z]+)")) {
-            System.out.println("Wrong customer name!" + "\n" + "Enter again:");
+            System.out.println("Wrong customer name!\nEnter again:");
             name = scanner.nextLine();
         }
         return name;
@@ -425,7 +449,7 @@ public class MyServiceImpl implements MyService {
     @Override
     public String setCustomerSurname(String surname) {
         while (!surname.matches("([A-Z]+)")) {
-            System.out.println("Wrong customer surname!" + "\n" + "Enter again:");
+            System.out.println("Wrong customer surname!\nEnter again:");
             surname = scanner.nextLine();
         }
         return surname;
@@ -436,14 +460,88 @@ public class MyServiceImpl implements MyService {
         while (!age.matches("([1-9]+[0-9])" + "|" + "([1]+[0-2]+[0-9])")
                 || Integer.valueOf(age) < 18
                 || Integer.valueOf(age) > 120) {
-            System.out.println("Wrong age format or age is to small!" + "\n" + "Enter again:");
+            System.out.println("Wrong age!\nEnter again:");
             age = scanner.nextLine();
         }
         return Integer.valueOf(age);
     }
 
     @Override
-    public Long OneCustomerFromOneCountry(String customerName, String customerSurname, Long countryId) throws Errors {
+    public Integer setPaymentType(String number) {
+        while (!number.matches("[1-3]")
+                || Integer.valueOf(number) < 1
+                || Integer.valueOf(number) > 3) {
+            System.out.println("Wrong number!\nEnter again");
+            number = scanner.nextLine();
+        }
+        return Integer.valueOf(number);
+    }
+
+    @Override
+    public String setProducerName(String name) {
+        while (!name.matches("([A-Z]+)")) {
+            System.out.println("Wrong product name!\nEnter again:");
+            name = scanner.nextLine();
+        }
+        return name;
+    }
+
+    @Override
+    public String setProductName(String name) {
+        while (!name.matches("(([A-Z])+)")) {
+            System.out.println("Wrong product name!\nEnter again:");
+            name = scanner.nextLine();
+        }
+        return name;
+    }
+
+    @Override
+    public BigDecimal setProductPrice(String price) {
+        while (BigDecimal.valueOf(Long.parseLong(price)).compareTo(BigDecimal.ZERO) < 1) {
+            System.out.println("Wrong product price!\nEnter again:");
+            price = scanner.nextLine();
+        }
+        return BigDecimal.valueOf(Long.parseLong(price));
+    }
+
+    @Override
+    public String setShopName(String name) {
+        while (!name.matches("([A-Z]+)")) {
+            System.out.println("Wrong shop name!\nEnter again:");
+            name = scanner.nextLine();
+        }
+        return name;
+    }
+
+    @Override
+    public int setQuantity(String quantity) {
+        while (!quantity.matches("[0-9]+") || Integer.valueOf(quantity) < 1) {
+            System.out.println("Wrong quantity!\nEnter again:");
+            quantity = scanner.nextLine();
+        }
+        return Integer.parseInt(quantity);
+    }
+
+    @Override
+    public String setTradeName(String name) {
+        while (!name.matches("([A-Z]+)")) {
+            System.out.println("Wrong trade name!\nEnter again:");
+            name = scanner.nextLine();
+        }
+        return name;
+    }
+
+    @Override
+    public Long setId(String id) {
+        while (!id.matches("[0-9]+") || Long.valueOf(id) < 1) {
+            System.out.println("Wrong value!\nEnter again:");
+            id = scanner.nextLine();
+        }
+        return Long.valueOf(id);
+    }
+
+    @Override
+    public Long oneCustomerFromOneCountry(String customerName, String customerSurname, Long countryId) throws Errors {
         List<Customer> customers
                 = customerRepository
                 .findAll()
@@ -459,16 +557,7 @@ public class MyServiceImpl implements MyService {
     }
 
     @Override
-    public String setProducerName(String name) {
-        while (!name.matches("([A-Z]+)")) {
-            System.out.println("Wrong product name!" + "\n" + "Enter again:");
-            name = scanner.nextLine();
-        }
-        return name;
-    }
-
-    @Override
-    public Long OneProducerNameAndTradeFromOneCountry(String producerName, Long tradeId, Long countryId) throws Errors {
+    public Long oneProducerNameAndTradeFromOneCountry(String producerName, Long tradeId, Long countryId) throws Errors {
         List<Producer> producers
                 = producerRepository
                 .findAll()
@@ -484,26 +573,7 @@ public class MyServiceImpl implements MyService {
     }
 
     @Override
-    public String setProductName(String name) {
-        while (!name.matches("(([A-Z])+)")) {
-            System.out.println("Wrong product name!" + "\n" + "Enter again:");
-            name = scanner.nextLine();
-        }
-        return name;
-    }
-
-    @Override
-    public BigDecimal setProductPrice(String price) {
-        while (BigDecimal.valueOf(Long.parseLong(price)).compareTo(BigDecimal.ZERO) < 1) {
-            System.out.println("Wrong product price!" + "\n" + "Enter again:");
-            price = scanner.nextLine();
-            scanner.nextLine();
-        }
-        return BigDecimal.valueOf(Long.parseLong(price));
-    }
-
-    @Override
-    public Long OneProductNameAndCategoryFromOneProducer(String productName, Long categoryId, Long producerId) throws Errors {
+    public Long oneProductNameAndCategoryFromOneProducer(String productName, Long categoryId, Long producerId) throws Errors {
         List<Product> products
                 = productRepository
                 .findAll()
@@ -519,16 +589,7 @@ public class MyServiceImpl implements MyService {
     }
 
     @Override
-    public String setShopName(String name) {
-        while (!name.matches("([A-Z]+)")) {
-            System.out.println("Wrong shop name!" + "\n" + "Enter again:");
-            name = scanner.nextLine();
-        }
-        return name;
-    }
-
-    @Override
-    public Long OneShopFromOneCountry(String shopName, Long countryId) throws Errors {
+    public Long oneShopFromOneCountry(String shopName, Long countryId) throws Errors {
         List<Shop> shops
                 = shopRepository
                 .findAll()
@@ -542,16 +603,7 @@ public class MyServiceImpl implements MyService {
     }
 
     @Override
-    public int setQuantity(String quantity) {
-        while (Integer.valueOf(quantity) < 1) {
-            System.out.println("Wrong quantity!" + "\n" + "Enter again:");
-            quantity = scanner.nextLine();
-        }
-        return Integer.parseInt(quantity);
-    }
-
-    @Override
-    public void OneProductFromOneShop(Long shopId, Long productId, Integer stockQuantity) throws Errors {
+    public void oneProductFromOneShopInStock(Long shopId, Long productId, Integer stockQuantity) throws Errors {
         List<Stock> stocks
                 = stockRepository
                 .findAll()
@@ -564,7 +616,26 @@ public class MyServiceImpl implements MyService {
             int updatedQuantity = stocks.get(0).getQuantity() + stockQuantity;
             long upId = stocks.get(0).getId();
             stockRepository.delete(upId);
-            updateStock(updatedQuantity, upId);
+            addStock(
+                    StockDto
+                            .builder()
+                            .quantity(updatedQuantity)
+                            .shopDto(ShopDto
+                                    .builder()
+                                    .name(shopRepository
+                                            .findOne(shopId)
+                                            .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " SHOP ", LocalDate.now()))
+                                            .getName())
+                                    .build())
+                            .productDto(ProductDto
+                                    .builder()
+                                    .name(productRepository
+                                            .findOne(productId)
+                                            .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " PRODUCT ", LocalDate.now()))
+                                            .getName())
+                                    .build())
+                            .build()
+            );
         } else {
             addStock(
                     StockDto
@@ -574,14 +645,14 @@ public class MyServiceImpl implements MyService {
                                     .builder()
                                     .name(shopRepository
                                             .findOne(shopId)
-                                            .orElseThrow(() -> new Errors("MENU ADD_STOCK, SHOP NOT FOUND", LocalDate.now()))
+                                            .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " SHOP ", LocalDate.now()))
                                             .getName())
                                     .build())
                             .productDto(ProductDto
                                     .builder()
                                     .name(productRepository
                                             .findOne(productId)
-                                            .orElseThrow(() -> new Errors("MENU - ADD_STOCK, PRODUCT NOT FOUND", LocalDate.now()))
+                                            .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " PRODUCT ", LocalDate.now()))
                                             .getName())
                                     .build())
                             .build()
@@ -590,11 +661,31 @@ public class MyServiceImpl implements MyService {
     }
 
     @Override
-    public String setTradeName(String name) {
-        while (!name.matches("([A-Z]+)")) {
-            System.out.println("Wrong trade name!" + "\n" + "Enter again:");
-            name = scanner.nextLine();
-        }
-        return name;
+    public void updateProductQuantity(Integer quantity, Long productId) {
+        List<Stock> stocks = stockRepository
+                .findAll()
+                .stream()
+                .filter(id -> id.getProduct().getId().equals(productId))
+                .collect(Collectors.toList());
+        Stock stock = stocks.get(0);
+        stockRepository.delete(stock.getId());
+        addStock(StockDto
+                .builder()
+                .quantity(stock.getQuantity() - quantity)
+                .productDto(ProductDto
+                        .builder()
+                        .name(productRepository
+                                .findOne(stock.getProduct().getId())
+                                .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " PRODUCT ", LocalDate.now()))
+                                .getName())
+                        .build())
+                .shopDto(ShopDto
+                        .builder()
+                        .name(shopRepository
+                                .findOne(stock.getShop().getId())
+                                .orElseThrow(() -> new Errors(EMessage.FAILED_TO_GET + " SHOP ", LocalDate.now()))
+                                .getName())
+                        .build())
+                .build());
     }
 }

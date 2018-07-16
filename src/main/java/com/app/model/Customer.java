@@ -25,7 +25,7 @@ import java.util.Set;
 @Table(name = "customers")
 public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
     private Integer age;
     private String name;

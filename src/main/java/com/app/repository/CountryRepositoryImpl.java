@@ -27,7 +27,7 @@ public class CountryRepositoryImpl extends AbstractGenericRepository<Country> im
             o = Optional.of((Country) query.getSingleResult());
             transaction.commit();
         } catch (Exception e) {
-            throw new Errors(CountryRepository.class + " " + EMessage.FIND_BY_NAME + e.getMessage(), LocalDate.now());
+            throw new Errors(CountryRepository.class + " " + EMessage.FIND_BY_NAME + " " + e.getMessage(), LocalDate.now());
         }
 
         return o;

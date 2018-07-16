@@ -24,7 +24,7 @@ import java.util.Set;
 @Table(name = "countries")
 public class Country {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
     @Column(unique = true)
     private String name;
