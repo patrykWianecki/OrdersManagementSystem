@@ -1,7 +1,7 @@
 package com.app.service;
 
-import com.app.dto.*;
 import com.app.model.*;
+import com.app.dto.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -102,4 +102,6 @@ public interface MyService {
     void oneProductFromOneShopInStock(Long shopId, Long productId, Integer stockQuantity);
 
     void updateProductQuantity(Integer quantity, Long productId);
+
+    void initializeData();
 }

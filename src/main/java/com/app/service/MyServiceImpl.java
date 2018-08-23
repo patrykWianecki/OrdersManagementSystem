@@ -1,8 +1,14 @@
 package com.app.service;
 
-import com.app.dto.*;
 import com.app.model.*;
+import com.app.parsers.implementations.CategoryParser;
+import com.app.parsers.implementations.CountryParser;
+import com.app.parsers.implementations.CustomerParser;
+import com.app.parsers.interfaces.FileNames;
+import com.app.parsers.interfaces.Parser;
 import com.app.repository.*;
+import com.app.dto.*;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -364,7 +370,7 @@ public class MyServiceImpl implements MyService {
     public BigDecimal setOrderDiscount(String discount) {
         while (!discount.matches("([0-9])|([1-9]+[0-9])|([1]+[0]+[0])")
                 || (BigDecimal.valueOf(Integer.valueOf(discount)).compareTo(BigDecimal.valueOf(100)) > 0)
-                ) {
+        ) {
             System.out.println("Wrong order discount!\nEnter again:");
             discount = scanner.nextLine();
         }
@@ -687,5 +693,68 @@ public class MyServiceImpl implements MyService {
                                 .getName())
                         .build())
                 .build());
+    }
+
+    @Override
+    public void initializeData() {
+//        addCategoriesFromFile();
+//        addCountriesFromFile();
+        addCustomersFromFile();
+    }
+
+    private void addCategoriesFromFile() {
+        List<Category> categories = Parser.parseFile(FileNames.CATEGORY, new CategoryParser());
+        if (categories != null) {
+            for (Category c : categories) {
+                if (c != null) {
+                    addCategory(CategoryDto
+                            .builder()
+                            .id(c.getId())
+                            .name(c.getName())
+                            .build());
+                } else {
+                    continue;
+                }
+            }
+        }
+    }
+
+    private void addCountriesFromFile() {
+        List<Country> countries = Parser.parseFile("country.txt", new CountryParser());
+        System.out.println(countries);
+        if (countries != null) {
+            for (Country c : countries) {
+                if (c != null) {
+                    addCountry(CountryDto
+                            .builder()
+                            .id(c.getId())
+                            .name(c.getName())
+                            .build());
+                } else {
+                    continue;
+                }
+            }
+        }
+    }
+
+    private void addCustomersFromFile() {
+        List<Customer> customers = Parser.parseFile("customer.txt", new CustomerParser());
+        for (Customer c : customers) {
+            if (c != null) {
+                addCustomer(CustomerDto
+                        .builder()
+                        .id(c.getId())
+                        .name(c.getName())
+                        .surname(c.getSurname())
+                        .age(c.getAge())
+//                            .countryDto(CountryDto
+//                                    .builder()
+//                                    .id(c.getCountry().getId())
+//                                    .build())
+                        .build());
+            } else {
+                continue;   // <--------- inaczej przerywa dodawanie, a tak dodaje tylko dobre dane
+            }
+        }
     }
 }
