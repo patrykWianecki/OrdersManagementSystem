@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.text.MessageFormat;
 import java.util.Objects;
 
 /**
@@ -53,9 +54,6 @@ public class Stock {
 
     @Override
     public String toString() {
-        return "Stock{" +
-                "id=" + id +
-                ", quantity=" + quantity +
-                '}';
+        return MessageFormat.format("{0}", quantity);
     }
 }

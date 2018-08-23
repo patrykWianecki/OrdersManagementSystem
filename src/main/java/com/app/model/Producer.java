@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -43,14 +44,6 @@ public class Producer {
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "producer", fetch = FetchType.EAGER)
     private Set<Product> products = new HashSet<>();
 
-    public void setName(String name) {
-        if (!name.equals(name.toUpperCase())) {
-            this.name = null;
-        } else {
-            this.name = name;
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,9 +60,6 @@ public class Producer {
 
     @Override
     public String toString() {
-        return "Producer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return MessageFormat.format("{0}", name);
     }
 }

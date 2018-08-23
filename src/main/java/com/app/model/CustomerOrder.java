@@ -7,11 +7,12 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Objects;
 
 /**
- * CustomerOrder is a class which entity for CustomerOrder table in database.
+ * CustomerOrderParser is a class which entity for CustomerOrderParser table in database.
  *
  * @author Patryk Wianecki
  * @version 1.0
@@ -65,11 +66,6 @@ public class CustomerOrder {
 
     @Override
     public String toString() {
-        return "CustomerOrder{" +
-                "id=" + id +
-                ", date=" + date +
-                ", discount=" + discount +
-                ", quantity=" + quantity +
-                '}';
+        return MessageFormat.format("{0} {1} {2}", date, discount, quantity);
     }
 }

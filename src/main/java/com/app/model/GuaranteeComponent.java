@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -55,9 +56,6 @@ public class GuaranteeComponent implements Serializable {
 
     @Override
     public String toString() {
-        return "GuaranteeComponent{" +
-                "product=" + product +
-                ", guaranteeComponent=" + guaranteeComponent +
-                '}';
+        return MessageFormat.format("{0} {1}", product, guaranteeComponent);
     }
 }

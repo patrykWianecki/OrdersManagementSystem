@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -58,11 +59,6 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", age=" + age +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                '}';
+        return MessageFormat.format("{0} {1} {2}", age, name, surname);
     }
 }

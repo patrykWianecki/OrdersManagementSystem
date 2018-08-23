@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
@@ -59,10 +60,6 @@ public class Errors extends RuntimeException {
 
     @Override
     public String toString() {
-        return "Errors{" +
-                "id=" + id +
-                ", date=" + date +
-                ", message='" + message + '\'' +
-                '}';
+        return MessageFormat.format("{0} {1}", date, message);
     }
 }

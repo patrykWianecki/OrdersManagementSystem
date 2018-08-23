@@ -20,7 +20,7 @@ public enum EMessage {
     FAILED_TO_GET,
     SERVICE_ADD;
 
-    public EMessage returnMessage(int number) {
+    public static EMessage returnMessage(int number) {
         switch (number) {
             case 1:
                 return ADD_OR_UPDATE;

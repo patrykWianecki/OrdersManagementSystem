@@ -31,7 +31,9 @@ public class App {
     private static State state = State.INIT;
 
     public static void main(String[] args) {
-        menu();
+        myService.initializeData();
+        DbConnection.getInstance().close();
+//        menu();
     }
 
     private enum State {
@@ -335,6 +337,7 @@ public class App {
     private static State printOther() {
         System.out.println("\n0 - exit");
         System.out.println("1 - print information");
+        System.out.println("2 - add data from file");
         int choice = scanner.nextInt();
         scanner.nextLine();
 
@@ -344,6 +347,9 @@ public class App {
                 break;
             case 1:
                 printInfo();
+                break;
+            case 2:
+                myService.initializeData();
                 break;
             default:
                 System.out.println("Wrong choice!");

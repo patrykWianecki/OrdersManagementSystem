@@ -13,7 +13,7 @@ import javax.persistence.Table;
 public enum EGuarantee {
     HELP_DESK, MONEY_BACK, SERVICE, EXCHANGE;
 
-    public EGuarantee returnGuarantee(int number) {
+    public static EGuarantee returnGuarantee(int number) {
         switch (number) {
             case 1:
                 return HELP_DESK;
