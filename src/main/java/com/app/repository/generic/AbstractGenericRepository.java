@@ -87,7 +87,6 @@ public class AbstractGenericRepository<T> implements GenericRepository<T> {
                 entityManager.close();
             }
         }
-
         return o;
     }
 
@@ -113,7 +112,6 @@ public class AbstractGenericRepository<T> implements GenericRepository<T> {
                 entityManager.close();
             }
         }
-
         return items;
     }
 }
