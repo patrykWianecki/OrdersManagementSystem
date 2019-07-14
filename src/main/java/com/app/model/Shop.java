@@ -6,17 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-/**
- * Shop is a class which entity for Shop table in database.
- *
- * @author Patryk Wianecki
- * @version 1.0
- */
 
 @Builder
 @NoArgsConstructor
@@ -25,12 +19,13 @@ import java.util.Set;
 @Entity
 @Table(name = "shops")
 public class Shop {
+
     @Id
     @GeneratedValue
     private Long id;
     private String name;
 
-    // countryId
+    // COUNTRY
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "country_id")
     private Country country;
@@ -45,7 +40,7 @@ public class Shop {
         if (o == null || getClass() != o.getClass()) return false;
         Shop shop = (Shop) o;
         return Objects.equals(id, shop.id) &&
-                Objects.equals(name, shop.name);
+            Objects.equals(name, shop.name);
     }
 
     @Override

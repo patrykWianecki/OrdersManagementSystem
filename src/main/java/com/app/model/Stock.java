@@ -6,15 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
 import java.text.MessageFormat;
 import java.util.Objects;
-
-/**
- * Stock is a class which entity for Stock table in database.
- *
- * @author Patryk Wianecki
- * @version 1.0
- */
 
 @Builder
 @AllArgsConstructor
@@ -23,17 +17,18 @@ import java.util.Objects;
 @Entity
 @Table(name = "stocks")
 public class Stock {
+
     @Id
     @GeneratedValue
     private Long id;
     private Integer quantity;
 
-    // prodcutId
+    // PRODUCT
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "product_id")
     private Product product;
 
-    // shopId
+    // SHOP
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "shop_id")
     private Shop shop;
@@ -44,7 +39,7 @@ public class Stock {
         if (o == null || getClass() != o.getClass()) return false;
         Stock stock = (Stock) o;
         return Objects.equals(id, stock.id) &&
-                Objects.equals(quantity, stock.quantity);
+            Objects.equals(quantity, stock.quantity);
     }
 
     @Override

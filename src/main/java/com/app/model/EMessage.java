@@ -1,15 +1,5 @@
 package com.app.model;
 
-import javax.persistence.Table;
-
-/**
- * EMessage is an enum with possible Error values.
- *
- * @author Patryk Wianecki
- * @version 1.0
- */
-
-@Table(name = "eMessages")
 public enum EMessage {
     ADD_OR_UPDATE,
     DELETE,

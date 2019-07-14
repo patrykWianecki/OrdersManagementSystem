@@ -1,16 +1,16 @@
 package com.app.repository.generic;
 
-import com.app.model.EMessage;
-import com.app.model.Errors;
+import java.lang.reflect.ParameterizedType;
+import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
-import java.lang.reflect.ParameterizedType;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+
+import com.app.exception.ExceptionCode;
+import com.app.exception.MyException;
 
 public class AbstractGenericRepository<T> implements GenericRepository<T> {
 
@@ -35,7 +35,7 @@ public class AbstractGenericRepository<T> implements GenericRepository<T> {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new Errors(EMessage.ADD_OR_UPDATE + " " + e.getMessage(), LocalDate.now());
+            throw new MyException(ExceptionCode.REPOSITORY, "Failed to add or update");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -58,7 +58,7 @@ public class AbstractGenericRepository<T> implements GenericRepository<T> {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new Errors(EMessage.DELETE + " " + e.getMessage(), LocalDate.now());
+            throw new MyException(ExceptionCode.REPOSITORY, "Failed to delete");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -81,7 +81,7 @@ public class AbstractGenericRepository<T> implements GenericRepository<T> {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new Errors(EMessage.FIND_ONE + " " + e.getMessage(), LocalDate.now());
+            throw new MyException(ExceptionCode.REPOSITORY, "Failed to find one");
         } finally {
             if (entityManager != null) {
                 entityManager.close();
@@ -106,7 +106,7 @@ public class AbstractGenericRepository<T> implements GenericRepository<T> {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new Errors(EMessage.FIND_ALL + " " + e.getMessage(), LocalDate.now());
+            throw new MyException(ExceptionCode.REPOSITORY, "Failed to find all");
         } finally {
             if (entityManager != null) {
                 entityManager.close();

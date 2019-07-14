@@ -6,18 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-/**
- * GuaranteeComponent is a class which entity for GuaranteeComponent table in database.
- *
- * @author Patryk Wianecki
- * @version 1.0
- */
 
 @Builder
 @NoArgsConstructor
@@ -26,13 +20,12 @@ import java.util.Set;
 @Entity
 @Table(name = "guaranteeComponents")
 public class GuaranteeComponent implements Serializable {
-    // productId
+
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_id")
     @Id
     @GeneratedValue
     private Product product;
-    private EGuarantee guaranteeComponent;
 
     @ElementCollection
     @CollectionTable(name = "eGuarantees", joinColumns = @JoinColumn(name = "guarantee_component"))
@@ -45,17 +38,16 @@ public class GuaranteeComponent implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GuaranteeComponent that = (GuaranteeComponent) o;
-        return Objects.equals(product, that.product) &&
-                guaranteeComponent == that.guaranteeComponent;
+        return Objects.equals(product, that.product);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(product, guaranteeComponent);
+        return Objects.hash(product);
     }
 
     @Override
     public String toString() {
-        return MessageFormat.format("{0} {1}", product, guaranteeComponent);
+        return MessageFormat.format("{0}", product);
     }
 }

@@ -6,17 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-/**
- * Country is a class which entity for Country table in database.
- *
- * @author Patryk Wianecki
- * @version 1.0
- */
 
 @Builder
 @NoArgsConstructor
@@ -25,6 +19,7 @@ import java.util.Set;
 @Entity
 @Table(name = "countries")
 public class Country {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -49,7 +44,7 @@ public class Country {
         if (o == null || getClass() != o.getClass()) return false;
         Country country = (Country) o;
         return Objects.equals(id, country.id) &&
-                Objects.equals(name, country.name);
+            Objects.equals(name, country.name);
     }
 
     @Override

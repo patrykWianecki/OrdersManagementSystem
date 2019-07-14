@@ -6,18 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-/**
- * Product is a class which entity for Product table in database.
- *
- * @author Patryk Wianecki
- * @version 1.0
- */
 
 @Builder
 @NoArgsConstructor
@@ -26,31 +20,27 @@ import java.util.Set;
 @Entity
 @Table(name = "products")
 public class Product {
+
     @Id
     @GeneratedValue
     private Long id;
     private String name;
     private BigDecimal price;
 
-    // categoryId
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    // producerId
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "producer_id")
     private Producer producer;
 
-    // CUSTOMER_ORDER
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "product", fetch = FetchType.EAGER)
-    private Set<CustomerOrder> customerOrders = new HashSet<>();
+    private Set<Order> orders = new HashSet<>();
 
-    // STOCK
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "product", fetch = FetchType.EAGER)
     private Set<Stock> stocks = new HashSet<>();
 
-    // GUARANTEE_COMPONENTS
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "product", fetch = FetchType.EAGER)
     private Set<GuaranteeComponent> guaranteeComponents = new HashSet<>();
 
@@ -60,8 +50,8 @@ public class Product {
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
         return Objects.equals(id, product.id) &&
-                Objects.equals(name, product.name) &&
-                Objects.equals(price, product.price);
+            Objects.equals(name, product.name) &&
+            Objects.equals(price, product.price);
     }
 
     @Override

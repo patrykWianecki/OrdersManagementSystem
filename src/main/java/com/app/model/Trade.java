@@ -1,23 +1,16 @@
 package com.app.model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-/**
- * Trade is a class which entity for Trade table in database.
- *
- * @author Patryk Wianecki
- * @version 1.0
- */
 
 @Builder
 @NoArgsConstructor
@@ -26,6 +19,7 @@ import java.util.Set;
 @Entity
 @Table(name = "trades")
 public class Trade {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -42,7 +36,7 @@ public class Trade {
         if (o == null || getClass() != o.getClass()) return false;
         Trade trade = (Trade) o;
         return Objects.equals(id, trade.id) &&
-                Objects.equals(name, trade.name);
+            Objects.equals(name, trade.name);
     }
 
     @Override

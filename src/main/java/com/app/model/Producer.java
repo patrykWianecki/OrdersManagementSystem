@@ -6,17 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-/**
- * Producer is a class which entity for Producer table in database.
- *
- * @author Patryk Wianecki
- * @version 1.0
- */
 
 @Builder
 @NoArgsConstructor
@@ -25,17 +19,18 @@ import java.util.Set;
 @Entity
 @Table(name = "producers")
 public class Producer {
+
     @Id
     @GeneratedValue
     private Long id;
     private String name;
 
-    // countryId
+    // COUNTRY
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "country_id")
     private Country country;
 
-    // tradeId
+    // TRADE
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "trade_id")
     private Trade trade;
@@ -50,7 +45,7 @@ public class Producer {
         if (o == null || getClass() != o.getClass()) return false;
         Producer producer = (Producer) o;
         return Objects.equals(id, producer.id) &&
-                Objects.equals(name, producer.name);
+            Objects.equals(name, producer.name);
     }
 
     @Override

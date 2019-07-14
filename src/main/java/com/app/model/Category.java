@@ -6,17 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-/**
- * Category is a class which entity for Category table in database.
- *
- * @author Patryk Wianecki
- * @version 1.0
- */
 
 @Builder
 @NoArgsConstructor
@@ -25,6 +19,7 @@ import java.util.Set;
 @Entity
 @Table(name = "categories")
 public class Category {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -41,7 +36,7 @@ public class Category {
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
         return Objects.equals(id, category.id) &&
-                Objects.equals(name, category.name);
+            Objects.equals(name, category.name);
     }
 
     @Override

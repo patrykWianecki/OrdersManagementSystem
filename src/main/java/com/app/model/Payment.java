@@ -6,17 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.text.MessageFormat;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-/**
- * Payment is a class which entity for Payment table in database.
- *
- * @author Patryk Wianecki
- * @version 1.0
- */
 
 @Builder
 @NoArgsConstructor
@@ -25,40 +18,30 @@ import java.util.Set;
 @Entity
 @Table(name = "payments")
 public class Payment {
+
     @Id
     @GeneratedValue
     private Long id;
-    @Column(unique = true)
-    @Enumerated(EnumType.STRING)
-    private EPayment payment;
 
-    // EPayment
     @ElementCollection
     @CollectionTable(name = "ePayments", joinColumns = @JoinColumn(name = "payment_id"))
     @Column(name = "ePayments")
     @Enumerated(EnumType.STRING)
     private Set<EPayment> ePayments = new HashSet<>();
 
-    // CUSTOMER_ORDER
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "payment", fetch = FetchType.EAGER)
-    private Set<CustomerOrder> customerOrders = new HashSet<>();
+    private Set<Order> orders = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Payment payment1 = (Payment) o;
-        return Objects.equals(id, payment1.id) &&
-                Objects.equals(payment, payment1.payment);
+        return Objects.equals(id, payment1.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, payment);
-    }
-
-    @Override
-    public String toString() {
-        return MessageFormat.format("{0}", payment);
+        return Objects.hash(id);
     }
 }
