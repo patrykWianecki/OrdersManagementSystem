@@ -5,8 +5,8 @@ public interface FileNames {
     String CATEGORY = "category.txt";
     String COUNTRY = "country.txt";
     String CUSTOMER = "customer.txt";
-    String CUSTOMER_ORDER = "customerOrder.txt";
     String GUARANTEE_COMPONENT = "guaranteeComponent.txt";
+    String ORDER = "order.txt";
     String PAYMENT = "payment.txt";
     String PRODUCER = "producer.txt";
     String PRODUCT = "product.txt";

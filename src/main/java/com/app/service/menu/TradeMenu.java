@@ -7,10 +7,11 @@ import com.app.model.State;
 import com.app.service.TradeService;
 import com.app.validator.TradeValidator;
 
+import static com.app.model.State.*;
+
 class TradeMenu {
 
     private static Scanner scanner = new Scanner(System.in);
-    private static State state;
 
     private TradeService tradeService = new TradeService();
     private TradeValidator tradeValidator = new TradeValidator();
@@ -21,18 +22,23 @@ class TradeMenu {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
+        State state;
         switch (choice) {
-            case 0:
-                state = State.INIT;
+            case 0: {
+                state = INIT;
                 break;
-            case 1:
+            }
+            case 1: {
                 state = addTrade();
                 break;
-            default:
+            }
+            default: {
                 System.out.println("Wrong choice!");
-                state = State.TRADE;
+                state = TRADE;
                 break;
+            }
         }
+
         return state;
     }
 
@@ -40,12 +46,11 @@ class TradeMenu {
         System.out.println("Enter trade name:");
         String name = tradeValidator.validateName(scanner.nextLine());
 
-        tradeService.addTrade(TradeDto
-            .builder()
+        tradeService.addTrade(TradeDto.builder()
             .name(name)
             .build()
         );
 
-        return State.TRADE;
+        return TRADE;
     }
 }

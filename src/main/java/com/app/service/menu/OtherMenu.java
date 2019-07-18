@@ -10,6 +10,8 @@ import com.app.service.ProductService;
 import com.app.service.ShopService;
 import com.app.service.TradeService;
 
+import static com.app.model.State.*;
+
 class OtherMenu {
 
     private static Scanner scanner = new Scanner(System.in);
@@ -30,7 +32,7 @@ class OtherMenu {
 
         switch (choice) {
             case 0: {
-                state = State.INIT;
+                state = INIT;
                 break;
             }
             case 1: {
@@ -39,10 +41,11 @@ class OtherMenu {
             }
             default: {
                 System.out.println("Wrong choice!");
-                state = State.OTHER;
+                state = OTHER;
                 break;
             }
         }
+
         return state;
     }
 
@@ -60,45 +63,46 @@ class OtherMenu {
 
         switch (choice) {
             case 0: {
-                state = State.OTHER;
+                state = OTHER;
                 break;
             }
             case 1: {
                 categoryService.printAllCategories();
-                state = State.OTHER;
+                state = OTHER;
                 break;
             }
             case 2: {
                 countryService.printAllCountries();
-                state = State.OTHER;
+                state = OTHER;
                 break;
             }
             case 3: {
                 producerService.printAllProducers();
-                state = State.OTHER;
+                state = OTHER;
                 break;
             }
             case 4: {
                 productService.printAllProducts();
-                state = State.OTHER;
+                state = OTHER;
                 break;
             }
             case 5: {
                 shopService.printAllShops();
-                state = State.OTHER;
+                state = OTHER;
                 break;
             }
             case 6: {
-                tradeService.printAllTrades();
-                state = State.OTHER;
+                System.out.println(tradeService.printAllTrades());
+                state = OTHER;
                 break;
             }
             default: {
                 System.out.println("Wrong choice!");
-                state = State.OTHER;
+                state = OTHER;
                 break;
             }
         }
+
         return state;
     }
 }

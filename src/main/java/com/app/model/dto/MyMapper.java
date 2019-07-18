@@ -4,16 +4,16 @@ import com.app.model.*;
 
 import java.util.HashSet;
 
-public class MyMapper {
+public interface MyMapper {
 
-    public CategoryDto fromCategoryToCategoryDto(Category category) {
+    static CategoryDto fromCategoryToCategoryDto(Category category) {
         return category == null ? null : CategoryDto
             .builder()
             .name(category.getName())
             .build();
     }
 
-    public Category fromCategoryDtoToCategory(CategoryDto categoryDto) {
+    static Category fromCategoryDtoToCategory(CategoryDto categoryDto) {
         return categoryDto == null ? null : Category
             .builder()
             .name(categoryDto.getName())
@@ -21,14 +21,14 @@ public class MyMapper {
             .build();
     }
 
-    public CountryDto fromCountryToCountryDto(Country country) {
+    static CountryDto fromCountryToCountryDto(Country country) {
         return country == null ? null : CountryDto
             .builder()
             .name(country.getName())
             .build();
     }
 
-    public Country fromCountryDtoToCountry(CountryDto countryDto) {
+    static Country fromCountryDtoToCountry(CountryDto countryDto) {
         return countryDto == null ? null : Country
             .builder()
             .name(countryDto.getName())
@@ -38,7 +38,7 @@ public class MyMapper {
             .build();
     }
 
-    public CustomerDto fromCustomerToCustomerDto(Customer customer) {
+    static CustomerDto fromCustomerToCustomerDto(Customer customer) {
         return customer == null ? null : CustomerDto
             .builder()
             .name(customer.getName())
@@ -48,7 +48,7 @@ public class MyMapper {
             .build();
     }
 
-    public Customer fromCustomerDtoToCustomer(CustomerDto customerDto) {
+    static Customer fromCustomerDtoToCustomer(CustomerDto customerDto) {
         return customerDto == null ? null : Customer
             .builder()
             .name(customerDto.getName())
@@ -59,52 +59,52 @@ public class MyMapper {
             .build();
     }
 
-    public OrderDto fromCustomerOrderToCustomerOrderDto(Order customerOrder) {
-        return customerOrder == null ? null : OrderDto
+    static OrderDto fromOrderToOrderDto(Order order) {
+        return order == null ? null : OrderDto
             .builder()
-            .date(customerOrder.getDate())
-            .discount(customerOrder.getDiscount())
-            .quantity(customerOrder.getQuantity())
-            .customerDto(customerOrder.getCustomer() == null ? null : fromCustomerToCustomerDto(customerOrder.getCustomer()))
-            .paymentDto(customerOrder.getPayment() == null ? null : fromPaymentToPaymentDto(customerOrder.getPayment()))
-            .productDto(customerOrder.getProduct() == null ? null : fromProductToProductDto(customerOrder.getProduct()))
+            .date(order.getDate())
+            .discount(order.getDiscount())
+            .quantity(order.getQuantity())
+            .customerDto(order.getCustomer() == null ? null : fromCustomerToCustomerDto(order.getCustomer()))
+            .paymentDto(order.getPayment() == null ? null : fromPaymentToPaymentDto(order.getPayment()))
+            .productDto(order.getProduct() == null ? null : fromProductToProductDto(order.getProduct()))
             .build();
     }
 
-    public Order fromCustomerOrderDtoToCustomerOrder(OrderDto customerOrderDto) {
-        return customerOrderDto == null ? null : Order
+    static Order fromOrderDtoToOrder(OrderDto orderDto) {
+        return orderDto == null ? null : Order
             .builder()
-            .date(customerOrderDto.getDate())
-            .discount(customerOrderDto.getDiscount())
-            .quantity(customerOrderDto.getQuantity())
-            .customer(customerOrderDto.getCustomerDto() == null ? null : fromCustomerDtoToCustomer(customerOrderDto.getCustomerDto()))
-            .payment(customerOrderDto.getPaymentDto() == null ? null : fromPaymentDtoToPayment(customerOrderDto.getPaymentDto()))
-            .product(customerOrderDto.getProductDto() == null ? null : fromProductDtoToProduct(customerOrderDto.getProductDto()))
+            .date(orderDto.getDate())
+            .discount(orderDto.getDiscount())
+            .quantity(orderDto.getQuantity())
+            .customer(orderDto.getCustomerDto() == null ? null : fromCustomerDtoToCustomer(orderDto.getCustomerDto()))
+            .payment(orderDto.getPaymentDto() == null ? null : fromPaymentDtoToPayment(orderDto.getPaymentDto()))
+            .product(orderDto.getProductDto() == null ? null : fromProductDtoToProduct(orderDto.getProductDto()))
             .build();
     }
 
-    public GuaranteeComponentDto fromGuaranteeComponentToGuaranteeComponentDto(GuaranteeComponent guaranteeComponent) {
+    static GuaranteeComponentDto fromGuaranteeComponentToGuaranteeComponentDto(GuaranteeComponent guaranteeComponent) {
         return guaranteeComponent == null ? null : GuaranteeComponentDto
             .builder()
             .productDto(guaranteeComponent.getProduct() == null ? null : fromProductToProductDto(guaranteeComponent.getProduct()))
             .build();
     }
 
-    public GuaranteeComponent fromGuaranteeComponentDtoToGuaranteeComponent(GuaranteeComponentDto guaranteeComponentDto) {
+    static GuaranteeComponent fromGuaranteeComponentDtoToGuaranteeComponent(GuaranteeComponentDto guaranteeComponentDto) {
         return guaranteeComponentDto == null ? null : GuaranteeComponent
             .builder()
             .product(guaranteeComponentDto.getProductDto() == null ? null : fromProductDtoToProduct(guaranteeComponentDto.getProductDto()))
             .build();
     }
 
-    public PaymentDto fromPaymentToPaymentDto(Payment payment) {
+    static PaymentDto fromPaymentToPaymentDto(Payment payment) {
         return payment == null ? null : PaymentDto
             .builder()
             .id(payment.getId())
             .build();
     }
 
-    public Payment fromPaymentDtoToPayment(PaymentDto paymentDto) {
+    static Payment fromPaymentDtoToPayment(PaymentDto paymentDto) {
         return paymentDto == null ? null : Payment
             .builder()
             .id(paymentDto.getId())
@@ -113,7 +113,7 @@ public class MyMapper {
             .build();
     }
 
-    public ProducerDto fromProducerToProducerDto(Producer producer) {
+    static ProducerDto fromProducerToProducerDto(Producer producer) {
         return producer == null ? null : ProducerDto
             .builder()
             .name(producer.getName())
@@ -122,7 +122,7 @@ public class MyMapper {
             .build();
     }
 
-    public Producer fromProducerDtoToProducer(ProducerDto producerDto) {
+    static Producer fromProducerDtoToProducer(ProducerDto producerDto) {
         return producerDto == null ? null : Producer
             .builder()
             .name(producerDto.getName())
@@ -132,7 +132,7 @@ public class MyMapper {
             .build();
     }
 
-    public ProductDto fromProductToProductDto(Product product) {
+    static ProductDto fromProductToProductDto(Product product) {
         return product == null ? null : ProductDto
             .builder()
             .name(product.getName())
@@ -142,7 +142,7 @@ public class MyMapper {
             .build();
     }
 
-    public Product fromProductDtoToProduct(ProductDto productDto) {
+    static Product fromProductDtoToProduct(ProductDto productDto) {
         return productDto == null ? null : Product
             .builder()
             .name(productDto.getName())
@@ -155,7 +155,7 @@ public class MyMapper {
             .build();
     }
 
-    public ShopDto fromShopToShopDto(Shop shop) {
+    static ShopDto fromShopToShopDto(Shop shop) {
         return shop == null ? null : ShopDto
             .builder()
             .name(shop.getName())
@@ -163,7 +163,7 @@ public class MyMapper {
             .build();
     }
 
-    public Shop fromShopDtoToShop(ShopDto shopDto) {
+    static Shop fromShopDtoToShop(ShopDto shopDto) {
         return shopDto == null ? null : Shop
             .builder()
             .name(shopDto.getName())
@@ -172,7 +172,7 @@ public class MyMapper {
             .build();
     }
 
-    public StockDto fromStockToStockDto(Stock stock) {
+    static StockDto fromStockToStockDto(Stock stock) {
         return stock == null ? null : StockDto
             .builder()
             .quantity(stock.getQuantity())
@@ -181,7 +181,7 @@ public class MyMapper {
             .build();
     }
 
-    public Stock fromStockDtoToStock(StockDto stockDto) {
+    static Stock fromStockDtoToStock(StockDto stockDto) {
         return stockDto == null ? null : Stock
             .builder()
             .quantity(stockDto.getQuantity())
@@ -190,14 +190,14 @@ public class MyMapper {
             .build();
     }
 
-    public TradeDto fromTradeToTradeDto(Trade trade) {
+    static TradeDto fromTradeToTradeDto(Trade trade) {
         return trade == null ? null : TradeDto
             .builder()
             .name(trade.getName())
             .build();
     }
 
-    public Trade fromTradeDtoToTrade(TradeDto tradeDto) {
+    static Trade fromTradeDtoToTrade(TradeDto tradeDto) {
         return tradeDto == null ? null : Trade
             .builder()
             .name(tradeDto.getName())

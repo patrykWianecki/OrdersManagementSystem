@@ -7,32 +7,38 @@ import com.app.model.State;
 import com.app.service.CountryService;
 import com.app.validator.CountryValidator;
 
-public class CountryMenu {
+import static com.app.model.State.*;
+
+class CountryMenu {
 
     private static Scanner scanner = new Scanner(System.in);
-    private static State state;
 
     private CountryService countryService = new CountryService();
     private CountryValidator countryValidator = new CountryValidator();
 
-    public State printCountry() {
+    State printCountry() {
         System.out.println("0 - exit");
         System.out.println("1 - add new Country");
         int choice = scanner.nextInt();
         scanner.nextLine();
 
+        State state;
         switch (choice) {
-            case 0:
-                state = State.INIT;
+            case 0: {
+                state = INIT;
                 break;
-            case 1:
+            }
+            case 1: {
                 state = addCountry();
                 break;
-            default:
+            }
+            default: {
                 System.out.println("Wrong choice!");
-                state = State.COUNTRY;
+                state = COUNTRY;
                 break;
+            }
         }
+
         return state;
     }
 
@@ -40,12 +46,11 @@ public class CountryMenu {
         System.out.println("Enter country name:");
         String name = countryValidator.validateName(scanner.nextLine());
 
-        countryService.addCountry(CountryDto
-            .builder()
+        countryService.addCountry(CountryDto.builder()
             .name(name)
             .build()
         );
 
-        return State.COUNTRY;
+        return COUNTRY;
     }
 }

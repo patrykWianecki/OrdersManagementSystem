@@ -9,5 +9,7 @@ public interface CustomerRepository extends GenericRepository<Customer> {
 
     Optional<Customer> findByNameAndSurname(String name, String surname);
 
+    boolean checkIfCustomerWithIdAndNameAndSurnameExists(Long id, String name, String surname);
+
     Optional<Customer> findByNameAndSurnameAndCountry(String name, String surname, Long countryId);
 }

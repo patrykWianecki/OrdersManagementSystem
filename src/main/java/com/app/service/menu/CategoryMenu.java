@@ -7,10 +7,11 @@ import com.app.model.State;
 import com.app.service.CategoryService;
 import com.app.validator.CategoryValidator;
 
-public class CategoryMenu {
+import static com.app.model.State.*;
+
+class CategoryMenu {
 
     private static Scanner scanner = new Scanner(System.in);
-    private static State state;
 
     private CategoryService categoryService = new CategoryService();
     private CategoryValidator categoryValidator = new CategoryValidator();
@@ -21,18 +22,23 @@ public class CategoryMenu {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
+        State state;
         switch (choice) {
-            case 0:
-                state = State.INIT;
+            case 0: {
+                state = INIT;
                 break;
-            case 1:
+            }
+            case 1: {
                 state = addCategory();
                 break;
-            default:
+            }
+            default: {
                 System.out.println("Wrong choice!");
-                state = State.CATEGORY;
+                state = CATEGORY;
                 break;
+            }
         }
+
         return state;
     }
 
@@ -40,12 +46,11 @@ public class CategoryMenu {
         System.out.println("Enter Category name:");
         String name = categoryValidator.validateCategoryName(scanner.nextLine());
 
-        categoryService.addCategory(CategoryDto
-            .builder()
+        categoryService.addCategory(CategoryDto.builder()
             .name(name)
             .build()
         );
 
-        return State.CATEGORY;
+        return CATEGORY;
     }
 }

@@ -1,28 +1,32 @@
 package com.app.service;
 
 import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
-import com.app.model.dto.MyMapper;
-import com.app.model.dto.TradeDto;
 import com.app.model.Trade;
+import com.app.model.dto.TradeDto;
 import com.app.repository.trade.TradeRepository;
 import com.app.repository.trade.TradeRepositoryImpl;
 
+import static com.app.model.dto.MyMapper.*;
+
 public class TradeService {
 
-    private MyMapper mapper = new MyMapper();
     private TradeRepository tradeRepository = new TradeRepositoryImpl();
 
     public void addTrade(TradeDto tradeDto) {
-        Trade trade = mapper.fromTradeDtoToTrade(tradeDto);
+        Trade trade = fromTradeDtoToTrade(tradeDto);
         tradeRepository.addOrUpdate(trade);
     }
 
-    public void printAllTrades() {
-        tradeRepository
-            .findAll()
+    public String printAllTrades() {
+        AtomicInteger counter = new AtomicInteger(1);
+        return tradeRepository.findAll()
             .stream()
             .sorted(Comparator.comparing(Trade::getId))
-            .forEach(trade -> System.out.println(trade.getId() + ". " + trade.getName()));
+            .map(Trade::toString)
+            .map(tradeName -> counter.getAndIncrement() + ". " + tradeName)
+            .collect(Collectors.joining("\n"));
     }
 }

@@ -15,7 +15,6 @@
     </properties>
 
     <dependencies>
-        <!--        TODO ogrnąć z jakimi najwyższymi wersjami działa-->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -33,7 +32,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- JUNIT 5 -->
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-launcher</artifactId>
@@ -59,12 +57,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <version>RELEASE</version>
+            <groupId>org.exparity</groupId>
+            <artifactId>hamcrest-date</artifactId>
+            <version>2.0.5</version>
             <scope>test</scope>
         </dependency>
-        <!-- MOCKITO -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>

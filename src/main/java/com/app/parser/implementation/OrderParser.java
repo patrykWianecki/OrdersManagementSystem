@@ -14,14 +14,14 @@ public class OrderParser implements Parser<Order> {
         if (!Parser.isLineCorrect(line, RegularExpressions.ORDER_REGEX)) {
             return null;
         }
-        String[] customerOrder = line.split(";");
+        String[] order = line.split(";");
         return Order.builder()
-            .id(Long.parseLong(customerOrder[0]))
-            .date(LocalDate.parse(customerOrder[1]))
-            .discount(new BigDecimal(customerOrder[2]))
-            .quantity(Integer.valueOf(customerOrder[3]))
-            .customer(Customer.builder().name(customerOrder[4]).build())
-            .product(Product.builder().name(customerOrder[6]).build())
+            .id(Long.parseLong(order[0]))
+            .date(LocalDate.parse(order[1]))
+            .discount(new BigDecimal(order[2]))
+            .quantity(Integer.valueOf(order[3]))
+            .customer(Customer.builder().name(order[4]).build())
+            .product(Product.builder().name(order[6]).build())
             .build();
     }
 }

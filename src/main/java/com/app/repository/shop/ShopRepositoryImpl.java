@@ -12,12 +12,13 @@ import com.app.model.Shop;
 import com.app.repository.generic.AbstractGenericRepository;
 
 public class ShopRepositoryImpl extends AbstractGenericRepository<Shop> implements ShopRepository {
+
     @Override
     public Optional<Shop> findByName(String name) {
-        Optional<Shop> o = Optional.empty();
+        Optional<Shop> o;
 
-        EntityManager entityManager = null;
-        EntityTransaction transaction = null;
+        EntityManager entityManager;
+        EntityTransaction transaction;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();
@@ -31,5 +32,27 @@ public class ShopRepositoryImpl extends AbstractGenericRepository<Shop> implemen
         }
 
         return o;
+    }
+
+    @Override
+    public boolean checkIfShopWithNameAndCountryExists(final String name, final Long countryId) {
+        Shop s;
+
+        EntityManager entityManager;
+        EntityTransaction transaction;
+        try {
+            entityManager = getEntityManagerFactory().createEntityManager();
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            Query query = entityManager.createQuery("select s from Shop s where s.name = :name and s.country.id = :countryId");
+            query.setParameter("name", name);
+            query.setParameter("countryId", countryId);
+            s = (Shop) query.getSingleResult();
+            transaction.commit();
+        } catch (Exception e) {
+            throw new MyException(ExceptionCode.REPOSITORY, "Failed to find shop by name and countryId");
+        }
+
+        return s != null;
     }
 }

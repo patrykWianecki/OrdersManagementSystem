@@ -2,34 +2,29 @@ package com.app.service.menu;
 
 import java.util.Scanner;
 
+import com.app.model.State;
 import com.app.model.dto.CountryDto;
 import com.app.model.dto.ProducerDto;
 import com.app.model.dto.TradeDto;
-import com.app.exception.ExceptionCode;
-import com.app.exception.MyException;
-import com.app.model.State;
-import com.app.repository.country.CountryRepository;
-import com.app.repository.country.CountryRepositoryImpl;
-import com.app.repository.trade.TradeRepository;
-import com.app.repository.trade.TradeRepositoryImpl;
 import com.app.service.CountryService;
 import com.app.service.MyService;
 import com.app.service.ProducerService;
+import com.app.service.TradeService;
 import com.app.validator.ProducerValidator;
 import com.app.validator.ToolsValidator;
 
-public class ProducerMenu {
+import static com.app.model.State.*;
+
+class ProducerMenu {
 
     private static Scanner scanner = new Scanner(System.in);
-    private static State state;
 
     private MyService myService = new MyService();
-    private ProducerService producerService = new ProducerService();
     private CountryService countryService = new CountryService();
+    private ProducerService producerService = new ProducerService();
     private ProducerValidator producerValidator = new ProducerValidator();
     private ToolsValidator toolsValidator = new ToolsValidator();
-    private CountryRepository countryRepository = new CountryRepositoryImpl();
-    private TradeRepository tradeRepository = new TradeRepositoryImpl();
+    private TradeService tradeService = new TradeService();
 
     State printProducer() {
         System.out.println("1 - add new Producer");
@@ -37,18 +32,23 @@ public class ProducerMenu {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
+        State state;
         switch (choice) {
-            case 1:
+            case 1: {
                 state = addProducer();
                 break;
-            case 0:
-                state = State.INIT;
+            }
+            case 0: {
+                state = INIT;
                 break;
-            default:
+            }
+            default: {
                 System.out.println("Wrong choice!");
-                state = State.PRODUCER;
+                state = PRODUCER;
                 break;
+            }
         }
+
         return state;
     }
 
@@ -57,36 +57,24 @@ public class ProducerMenu {
         String name = producerValidator.validateName(scanner.nextLine());
 
         System.out.println("Chose trade from list:");
-        // TODO
-        //        myService.printAllTrades();
+        System.out.println(tradeService.printAllTrades());
         long tradeId = toolsValidator.chooseId(scanner.nextLine());
 
         System.out.println("Chose country from list:");
         countryService.printAllCountries();
-        long countryId = myService.oneProducerNameAndTradeFromOneCountry(name, tradeId, toolsValidator.chooseId(scanner.nextLine()));
+        long countryId = myService.findAvailableProducerName(name, tradeId, toolsValidator.chooseId(scanner.nextLine()));
 
-        producerService.addProducer(ProducerDto
-            .builder()
+        producerService.addProducer(ProducerDto.builder()
             .name(name)
-            .countryDto(CountryDto
-                .builder()
-                .name(countryRepository
-                    .findOne(countryId)
-                    .orElseThrow(() -> new MyException(ExceptionCode.SERVICE, "TODO"))
-                    .getName()
-                )
+            .countryDto(CountryDto.builder()
+                .name(myService.findCountryByIdWithErrorCheck(countryId).getName())
                 .build())
-            .tradeDto(TradeDto
-                .builder()
-                .name(tradeRepository
-                    .findOne(tradeId)
-                    .orElseThrow(() -> new MyException(ExceptionCode.SERVICE, "TODO"))
-                    .getName()
-                )
+            .tradeDto(TradeDto.builder()
+                .name(myService.findTradeByIdWithErrorCheck(tradeId).getName())
                 .build())
             .build()
         );
 
-        return State.PRODUCER;
+        return PRODUCER;
     }
 }

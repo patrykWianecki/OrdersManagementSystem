@@ -10,17 +10,15 @@ import com.app.repository.category.CategoryRepositoryImpl;
 
 public class CategoryService {
 
-    private MyMapper mapper = new MyMapper();
     private CategoryRepository categoryRepository = new CategoryRepositoryImpl();
 
     public void addCategory(CategoryDto categoryDto) {
-        Category category = mapper.fromCategoryDtoToCategory(categoryDto);
+        Category category = MyMapper.fromCategoryDtoToCategory(categoryDto);
         categoryRepository.addOrUpdate(category);
     }
 
     public void printAllCategories() {
-        categoryRepository
-            .findAll()
+        categoryRepository.findAll()
             .stream()
             .sorted(Comparator.comparing(Category::getId))
             .forEach(category -> System.out.println(category.getId() + ". " + category.getName()));

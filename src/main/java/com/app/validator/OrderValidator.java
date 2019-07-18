@@ -8,7 +8,7 @@ import com.app.exception.MyException;
 import com.app.repository.stock.StockRepository;
 import com.app.repository.stock.StockRepositoryImpl;
 
-public class CustomerOrderValidator {
+public class OrderValidator {
 
     private Scanner scanner = new Scanner(System.in);
     private StockRepository stockRepository = new StockRepositoryImpl();

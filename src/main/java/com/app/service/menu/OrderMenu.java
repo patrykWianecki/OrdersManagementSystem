@@ -4,37 +4,30 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Scanner;
 
+import com.app.model.State;
 import com.app.model.dto.CustomerDto;
 import com.app.model.dto.OrderDto;
 import com.app.model.dto.PaymentDto;
 import com.app.model.dto.ProductDto;
-import com.app.exception.ExceptionCode;
-import com.app.exception.MyException;
-import com.app.model.State;
-import com.app.repository.customer.CustomerRepository;
-import com.app.repository.customer.CustomerRepositoryImpl;
-import com.app.repository.product.ProductRepository;
-import com.app.repository.product.ProductRepositoryImpl;
-import com.app.service.OrderService;
 import com.app.service.CustomerService;
 import com.app.service.MyService;
+import com.app.service.OrderService;
+import com.app.service.PaymentService;
 import com.app.service.ProductService;
-import com.app.validator.CustomerOrderValidator;
+import com.app.validator.OrderValidator;
 import com.app.validator.ToolsValidator;
 
-public class OrderMenu {
+class OrderMenu {
 
     private static Scanner scanner = new Scanner(System.in);
-    private static State state;
 
     private MyService myService = new MyService();
     private OrderService orderService = new OrderService();
     private ProductService productService = new ProductService();
     private CustomerService customerService = new CustomerService();
-    private ProductRepository productRepository = new ProductRepositoryImpl();
-    private CustomerRepository customerRepository = new CustomerRepositoryImpl();
+    private PaymentService paymentService = new PaymentService();
     private ToolsValidator toolsValidator = new ToolsValidator();
-    private CustomerOrderValidator customerOrderValidator = new CustomerOrderValidator();
+    private OrderValidator orderValidator = new OrderValidator();
 
     State printOrder() {
         System.out.println("1 - add new Order");
@@ -42,17 +35,21 @@ public class OrderMenu {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
+        State state;
         switch (choice) {
-            case 1:
+            case 1: {
                 state = addOrder();
                 break;
-            case 0:
+            }
+            case 0: {
                 state = State.INIT;
                 break;
-            default:
+            }
+            default: {
                 System.out.println("Wrong choice!");
                 state = State.ORDER;
                 break;
+            }
         }
         return state;
     }
@@ -67,42 +64,28 @@ public class OrderMenu {
 
         long customerId = toolsValidator.chooseId(scanner.nextLine());
         System.out.println("Enter discount:");
-        BigDecimal discount = customerOrderValidator.validateDiscount(scanner.nextLine());
+        BigDecimal discount = orderValidator.validateDiscount(scanner.nextLine());
 
         System.out.println("Chose payment id from list:");
-        // TODO
-//        myService.printAllPayments();
-//        int paymentId = myService.setPaymentType(scanner.nextLine());
+        paymentService.printAllPayments();
+        long paymentId = toolsValidator.chooseId(scanner.nextLine());
 
         System.out.println("Enter quantity:");
-        int quantity = customerOrderValidator.validateQuantity(scanner.nextLine(), productId);
+        int quantity = orderValidator.validateQuantity(scanner.nextLine(), productId);
         myService.updateProductQuantity(quantity, productId);
 
-        orderService.addCustomerOrder(OrderDto
-            .builder()
-            .productDto(ProductDto
-                .builder()
-                .name(productRepository
-                    .findOne(productId)
-                    .orElseThrow(() -> new MyException(ExceptionCode.SERVICE, "TODO"))
-                    .getName()
-                )
+        orderService.addOrder(OrderDto.builder()
+            .productDto(ProductDto.builder()
+                .name(myService.findProductByIdWithErrorCheck(productId).getName())
                 .build())
             .quantity(quantity)
             .discount(discount)
             .date(LocalDate.now())
-            .paymentDto(PaymentDto
-                .builder()
-                // TODO
-//                .payment(EPayment.returnPayment(paymentId))
+            .paymentDto(PaymentDto.builder()
+                .id(paymentId)
                 .build())
-            .customerDto(CustomerDto
-                .builder()
-                .name(customerRepository
-                    .findOne(customerId)
-                    .orElseThrow(() -> new MyException(ExceptionCode.SERVICE, "TODO"))
-                    .getName()
-                )
+            .customerDto(CustomerDto.builder()
+                .name(myService.findCustomerByIdWithErrorCheck(customerId).getName())
                 .build())
             .build()
         );

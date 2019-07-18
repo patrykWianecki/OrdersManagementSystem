@@ -36,6 +36,30 @@ public class CustomerRepositoryImpl extends AbstractGenericRepository<Customer> 
     }
 
     @Override
+    public boolean checkIfCustomerWithIdAndNameAndSurnameExists(Long id, String name, String surname) {
+        Customer c;
+
+        EntityManager entityManager;
+        EntityTransaction transaction;
+        try {
+            entityManager = getEntityManagerFactory().createEntityManager();
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            Query query = entityManager
+                .createQuery("select c from Customer c where c.id = :id and c.name = :name and c.surname = :surname");
+            query.setParameter("id", id);
+            query.setParameter("name", name);
+            query.setParameter("surname", surname);
+            c = (Customer) query.getSingleResult();
+            transaction.commit();
+        } catch (Exception e) {
+            throw new MyException(ExceptionCode.REPOSITORY, "Failed to find customer by id, name and surname");
+        }
+
+        return c != null;
+    }
+
+    @Override
     public Optional<Customer> findByNameAndSurnameAndCountry(String name, String surname, Long countryId) {
         Optional<Customer> o;
 
@@ -49,11 +73,11 @@ public class CustomerRepositoryImpl extends AbstractGenericRepository<Customer> 
                 .createQuery("select c from Customer c where c.name = :name and c.surname = :surname and c.country.id = :countryId");
             query.setParameter("name", name);
             query.setParameter("surname", surname);
-            query.setParameter("country", countryId);
+            query.setParameter("countryId", countryId);
             o = Optional.of((Customer) query.getSingleResult());
             transaction.commit();
         } catch (Exception e) {
-            throw new MyException(ExceptionCode.REPOSITORY, "Failed to find customer by name, surname and country");
+            throw new MyException(ExceptionCode.REPOSITORY, "Failed to find customer by name, surname and country id");
         }
 
         return o;

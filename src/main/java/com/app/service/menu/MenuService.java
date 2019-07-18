@@ -7,9 +7,11 @@ import com.app.exception.MyException;
 import com.app.model.State;
 import com.app.repository.generic.DbConnection;
 
+import static com.app.model.State.*;
+
 public class MenuService {
 
-    private static State state = State.INIT;
+    private static State state = INIT;
     private static Scanner scanner = new Scanner(System.in);
 
     private CategoryMenu categoryMenu = new CategoryMenu();
@@ -25,46 +27,58 @@ public class MenuService {
 
     public void menu() {
         try {
-            while (state != State.EXIT) {
+            while (state != EXIT) {
                 switch (state) {
-                    case INIT:
+                    case INIT: {
                         printInit();
                         break;
-                    case CATEGORY:
+                    }
+                    case CATEGORY: {
                         state = categoryMenu.printCategory();
                         break;
-                    case COUNTRY:
+                    }
+                    case COUNTRY: {
                         state = countryMenu.printCountry();
                         break;
-                    case CUSTOMER:
+                    }
+                    case CUSTOMER: {
                         state = customerMenu.printCustomer();
                         break;
-                    case ORDER:
+                    }
+                    case ORDER: {
                         state = orderMenu.printOrder();
                         break;
-                    case PRODUCER:
+                    }
+                    case PRODUCER: {
                         state = producerMenu.printProducer();
                         break;
-                    case PRODUCT:
+                    }
+                    case PRODUCT: {
                         state = productMenu.printProduct();
                         break;
-                    case SHOP:
+                    }
+                    case SHOP: {
                         state = shopMenu.printShop();
                         break;
-                    case STOCK:
+                    }
+                    case STOCK: {
                         state = stockMenu.printStock();
                         break;
-                    case TRADE:
+                    }
+                    case TRADE: {
                         state = tradeMenu.printTrade();
                         break;
-                    case OTHER:
+                    }
+                    case OTHER: {
                         state = otherMenu.printOther();
                         break;
+                    }
                 }
             }
         } catch (Exception e) {
-            throw new MyException(ExceptionCode.MENU, "");
+            throw new MyException(ExceptionCode.MENU, "Menu exception");
         }
+
         DbConnection.getInstance().close();
     }
 
@@ -86,47 +100,58 @@ public class MenuService {
         scanner.nextLine();
 
         switch (choice) {
-            case 1:
-                state = State.CATEGORY;
+            case 1: {
+                state = CATEGORY;
                 break;
-            case 2:
-                state = State.COUNTRY;
+            }
+            case 2: {
+                state = COUNTRY;
                 break;
-            case 3:
-                state = State.CUSTOMER;
+            }
+            case 3: {
+                state = CUSTOMER;
                 break;
-            case 4:
-                state = State.ORDER;
+            }
+            case 4: {
+                state = ORDER;
                 break;
-            case 5:
-                state = State.PRODUCER;
+            }
+            case 5: {
+                state = PRODUCER;
                 break;
-            case 6:
-                state = State.PRODUCT;
+            }
+            case 6: {
+                state = PRODUCT;
                 break;
-            case 7:
-                state = State.SHOP;
+            }
+            case 7: {
+                state = SHOP;
                 break;
-            case 8:
-                state = State.STOCK;
+            }
+            case 8: {
+                state = STOCK;
                 break;
-            case 9:
-                state = State.TRADE;
+            }
+            case 9: {
+                state = TRADE;
                 break;
-            case 10:
-                state = State.OTHER;
+            }
+            case 10: {
+                state = OTHER;
                 break;
+            }
             case 0: {
-                state = State.EXIT;
+                state = EXIT;
                 System.out.println("CIAO");
                 break;
             }
             default: {
                 System.out.println("Wrong choice!");
-                state = State.INIT;
+                state = INIT;
                 break;
             }
         }
+
         return state;
     }
 }

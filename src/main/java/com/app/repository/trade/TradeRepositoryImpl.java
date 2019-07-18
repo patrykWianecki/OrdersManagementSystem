@@ -12,12 +12,13 @@ import com.app.model.Trade;
 import com.app.repository.generic.AbstractGenericRepository;
 
 public class TradeRepositoryImpl extends AbstractGenericRepository<Trade> implements TradeRepository {
+
     @Override
     public Optional<Trade> findByName(String name) {
-        Optional<Trade> o = Optional.empty();
+        Optional<Trade> o;
 
-        EntityManager entityManager = null;
-        EntityTransaction transaction = null;
+        EntityManager entityManager;
+        EntityTransaction transaction;
         try {
             entityManager = getEntityManagerFactory().createEntityManager();
             transaction = entityManager.getTransaction();

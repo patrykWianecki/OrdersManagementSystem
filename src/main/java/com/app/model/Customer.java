@@ -32,7 +32,7 @@ public class Customer {
     @JoinColumn(name = "country_id")
     private Country country;
 
-    // CUSTOMER_ORDER
+    // ORDER
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "customer", fetch = FetchType.EAGER)
     private Set<Order> orders = new HashSet<>();
 

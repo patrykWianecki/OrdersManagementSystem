@@ -11,8 +11,7 @@ public class PaymentService {
     private PaymentRepository paymentRepository = new PaymentRepositoryImpl();
 
     public void printAllPayments() {
-        paymentRepository
-            .findAll()
+        paymentRepository.findAll()
             .stream()
             .sorted(Comparator.comparing(Payment::getId))
             .forEach(payment -> System.out.println(payment.getId() + ". " + payment.getEPayments()));
