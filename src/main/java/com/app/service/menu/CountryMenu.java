@@ -22,34 +22,25 @@ class CountryMenu {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
-        State state;
         switch (choice) {
             case 0: {
-                state = INIT;
-                break;
+                return INIT;
             }
             case 1: {
-                state = addCountry();
-                break;
+                return addCountry();
             }
             default: {
                 System.out.println("Wrong choice!");
-                state = COUNTRY;
-                break;
+                return COUNTRY;
             }
         }
-
-        return state;
     }
 
     private State addCountry() {
         System.out.println("Enter country name:");
         String name = countryValidator.validateName(scanner.nextLine());
 
-        countryService.addCountry(CountryDto.builder()
-            .name(name)
-            .build()
-        );
+        countryService.addCountry(CountryDto.builder().name(name).build());
 
         return COUNTRY;
     }

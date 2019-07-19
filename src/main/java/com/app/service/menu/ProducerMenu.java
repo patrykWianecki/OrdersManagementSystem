@@ -32,24 +32,18 @@ class ProducerMenu {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
-        State state;
         switch (choice) {
             case 1: {
-                state = addProducer();
-                break;
+                return addProducer();
             }
             case 0: {
-                state = INIT;
-                break;
+                return INIT;
             }
             default: {
                 System.out.println("Wrong choice!");
-                state = PRODUCER;
-                break;
+                return PRODUCER;
             }
         }
-
-        return state;
     }
 
     private State addProducer() {

@@ -32,24 +32,18 @@ class CustomerMenu {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
-        State state;
         switch (choice) {
             case 1: {
-                state = addCustomer();
-                break;
+                return addCustomer();
             }
             case 0: {
-                state = INIT;
-                break;
+                return INIT;
             }
             default: {
                 System.out.println("Wrong choice!");
-                state = CUSTOMER;
-                break;
+                return CUSTOMER;
             }
         }
-
-        return state;
     }
 
     private State addCustomer() {

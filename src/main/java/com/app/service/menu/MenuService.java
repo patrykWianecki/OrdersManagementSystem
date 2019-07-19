@@ -101,57 +101,43 @@ public class MenuService {
 
         switch (choice) {
             case 1: {
-                state = CATEGORY;
-                break;
+                return CATEGORY;
             }
             case 2: {
-                state = COUNTRY;
-                break;
+                return COUNTRY;
             }
             case 3: {
-                state = CUSTOMER;
-                break;
+                return CUSTOMER;
             }
             case 4: {
-                state = ORDER;
-                break;
+                return ORDER;
             }
             case 5: {
-                state = PRODUCER;
-                break;
+                return PRODUCER;
             }
             case 6: {
-                state = PRODUCT;
-                break;
+                return PRODUCT;
             }
             case 7: {
-                state = SHOP;
-                break;
+                return SHOP;
             }
             case 8: {
-                state = STOCK;
-                break;
+                return STOCK;
             }
             case 9: {
-                state = TRADE;
-                break;
+                return TRADE;
             }
             case 10: {
-                state = OTHER;
-                break;
+                return OTHER;
             }
             case 0: {
-                state = EXIT;
                 System.out.println("CIAO");
-                break;
+                return EXIT;
             }
             default: {
                 System.out.println("Wrong choice!");
-                state = INIT;
-                break;
+                return INIT;
             }
         }
-
-        return state;
     }
 }

@@ -1,6 +1,8 @@
 package com.app.service;
 
 import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import com.app.exception.ExceptionCode;
 import com.app.exception.MyException;
@@ -35,10 +37,13 @@ public class ShopService {
         }
     }
 
-    public void printAllShops() {
-        shopRepository.findAll()
+    public String printAllShops() {
+        AtomicInteger counter = new AtomicInteger(1);
+        return shopRepository.findAll()
             .stream()
             .sorted(Comparator.comparing(Shop::getId))
-            .forEach(shop -> System.out.println(shop.getId() + ". " + shop.getName()));
+            .map(Shop::toString)
+            .map(shopName -> counter.getAndIncrement() + ". " + shopName)
+            .collect(Collectors.joining("\n"));
     }
 }

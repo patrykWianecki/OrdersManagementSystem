@@ -27,24 +27,18 @@ class StockMenu {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
-        State state;
         switch (choice) {
             case 1: {
-                state = addStock();
-                break;
+                return addStock();
             }
             case 0: {
-                state = INIT;
-                break;
+                return INIT;
             }
             default: {
                 System.out.println("Wrong choice!");
-                state = STOCK;
-                break;
+                return STOCK;
             }
         }
-
-        return state;
     }
 
     private State addStock() {
@@ -52,7 +46,7 @@ class StockMenu {
         int quantity = stockValidator.validateQuantity(scanner.nextLine());
 
         System.out.println("Chose shop from list:");
-        shopService.printAllShops();
+        System.out.println(shopService.printAllShops());
 
         long shopId = toolsValidator.chooseId(scanner.nextLine());
         System.out.println("Chose product from list:");

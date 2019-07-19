@@ -33,24 +33,18 @@ class ProductMenu {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
-        State state;
         switch (choice) {
             case 1: {
-                state = addProduct();
-                break;
+                return addProduct();
             }
             case 0: {
-                state = INIT;
-                break;
+                return INIT;
             }
             default: {
                 System.out.println("Wrong choice!");
-                state = PRODUCT;
-                break;
+                return PRODUCT;
             }
         }
-
-        return state;
     }
 
     private State addProduct() {

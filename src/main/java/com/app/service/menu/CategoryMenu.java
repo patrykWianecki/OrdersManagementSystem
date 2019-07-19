@@ -22,34 +22,25 @@ class CategoryMenu {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
-        State state;
         switch (choice) {
             case 0: {
-                state = INIT;
-                break;
+                return INIT;
             }
             case 1: {
-                state = addCategory();
-                break;
+                return addCategory();
             }
             default: {
                 System.out.println("Wrong choice!");
-                state = CATEGORY;
-                break;
+                return CATEGORY;
             }
         }
-
-        return state;
     }
 
     private State addCategory() {
         System.out.println("Enter Category name:");
         String name = categoryValidator.validateCategoryName(scanner.nextLine());
 
-        categoryService.addCategory(CategoryDto.builder()
-            .name(name)
-            .build()
-        );
+        categoryService.addCategory(CategoryDto.builder().name(name).build());
 
         return CATEGORY;
     }

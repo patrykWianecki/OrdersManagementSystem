@@ -29,24 +29,18 @@ class ShopMenu {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
-        State state;
         switch (choice) {
             case 1: {
-                state = addShop();
-                break;
+                return addShop();
             }
             case 0: {
-                state = INIT;
-                break;
+                return INIT;
             }
             default: {
                 System.out.println("Wrong choice!");
-                state = SHOP;
-                break;
+                return SHOP;
             }
         }
-
-        return state;
     }
 
     private State addShop() {

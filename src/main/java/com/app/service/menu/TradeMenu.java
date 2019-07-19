@@ -22,34 +22,25 @@ class TradeMenu {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
-        State state;
         switch (choice) {
             case 0: {
-                state = INIT;
-                break;
+                return INIT;
             }
             case 1: {
-                state = addTrade();
-                break;
+                return addTrade();
             }
             default: {
                 System.out.println("Wrong choice!");
-                state = TRADE;
-                break;
+                return TRADE;
             }
         }
-
-        return state;
     }
 
     private State addTrade() {
         System.out.println("Enter trade name:");
         String name = tradeValidator.validateName(scanner.nextLine());
 
-        tradeService.addTrade(TradeDto.builder()
-            .name(name)
-            .build()
-        );
+        tradeService.addTrade(TradeDto.builder().name(name).build());
 
         return TRADE;
     }

@@ -17,6 +17,8 @@ import com.app.service.ProductService;
 import com.app.validator.OrderValidator;
 import com.app.validator.ToolsValidator;
 
+import static com.app.model.State.*;
+
 class OrderMenu {
 
     private static Scanner scanner = new Scanner(System.in);
@@ -35,23 +37,18 @@ class OrderMenu {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
-        State state;
         switch (choice) {
             case 1: {
-                state = addOrder();
-                break;
+                return addOrder();
             }
             case 0: {
-                state = State.INIT;
-                break;
+                return INIT;
             }
             default: {
                 System.out.println("Wrong choice!");
-                state = State.ORDER;
-                break;
+                return ORDER;
             }
         }
-        return state;
     }
 
     private State addOrder() {
@@ -90,6 +87,6 @@ class OrderMenu {
             .build()
         );
 
-        return State.ORDER;
+        return ORDER;
     }
 }

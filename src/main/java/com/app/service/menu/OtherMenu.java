@@ -15,7 +15,6 @@ import static com.app.model.State.*;
 class OtherMenu {
 
     private static Scanner scanner = new Scanner(System.in);
-    private static State state;
 
     private CategoryService categoryService = new CategoryService();
     private CountryService countryService = new CountryService();
@@ -32,21 +31,16 @@ class OtherMenu {
 
         switch (choice) {
             case 0: {
-                state = INIT;
-                break;
+                return INIT;
             }
             case 1: {
-                state = printInfo();
-                break;
+                return printInfo();
             }
             default: {
                 System.out.println("Wrong choice!");
-                state = OTHER;
-                break;
+                return OTHER;
             }
         }
-
-        return state;
     }
 
     private State printInfo() {
@@ -63,46 +57,36 @@ class OtherMenu {
 
         switch (choice) {
             case 0: {
-                state = OTHER;
-                break;
+                return OTHER;
             }
             case 1: {
                 categoryService.printAllCategories();
-                state = OTHER;
-                break;
+                return OTHER;
             }
             case 2: {
                 countryService.printAllCountries();
-                state = OTHER;
-                break;
+                return OTHER;
             }
             case 3: {
                 producerService.printAllProducers();
-                state = OTHER;
-                break;
+                return OTHER;
             }
             case 4: {
                 productService.printAllProducts();
-                state = OTHER;
-                break;
+                return OTHER;
             }
             case 5: {
-                shopService.printAllShops();
-                state = OTHER;
-                break;
+                System.out.println(shopService.printAllShops());
+                return OTHER;
             }
             case 6: {
                 System.out.println(tradeService.printAllTrades());
-                state = OTHER;
-                break;
+                return OTHER;
             }
             default: {
                 System.out.println("Wrong choice!");
-                state = OTHER;
-                break;
+                return OTHER;
             }
         }
-
-        return state;
     }
 }
