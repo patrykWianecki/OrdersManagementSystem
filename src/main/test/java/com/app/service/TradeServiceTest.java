@@ -25,7 +25,7 @@ class TradeServiceTest {
     private TradeService tradeService;
 
     @Test
-    void should_() {
+    void should_successfully_create_message_with_trades() {
         // given
         when(tradeRepository.findAll()).thenReturn(createTrades());
 
