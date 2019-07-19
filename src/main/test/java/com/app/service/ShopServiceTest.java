@@ -25,7 +25,7 @@ class ShopServiceTest {
     private ShopService shopService;
 
     @Test
-    void should_successfully_create_message_with_trades() {
+    void should_successfully_create_message_with_shops() {
         // given
         when(shopRepository.findAll()).thenReturn(createShops());
 
